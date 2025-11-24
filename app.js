@@ -168,15 +168,62 @@ form.addEventListener('submit', async (e) => {
         }
         
         // Call Supabase RPC function
-        const { data, error } = await supabase.rpc('waitlist_signup', {
+        console.log('[DEBUG] Making RPC call to waitlist_signup...');
+        console.log('[DEBUG] Full request details:', {
+            function: 'waitlist_signup',
+            params: { p_email: email },
+            url: supabase?.supabaseUrl,
+            hasKey: !!supabase?.supabaseKey
+        });
+        
+        // Make the RPC call
+        const rpcResponse = await supabase.rpc('waitlist_signup', {
             p_email: email
         });
         
-        console.log('[DEBUG] Supabase RPC call completed');
-        console.log('[DEBUG] Response data:', JSON.stringify(data, null, 2));
+        const { data, error } = rpcResponse;
+        
+        console.log('[DEBUG] ===== RPC CALL RESPONSE =====');
+        console.log('[DEBUG] Full response object:', rpcResponse);
+        console.log('[DEBUG] Response data:', data);
+        console.log('[DEBUG] Response data (stringified):', JSON.stringify(data, null, 2));
         console.log('[DEBUG] Response error:', error);
+        console.log('[DEBUG] Data type:', typeof data);
         console.log('[DEBUG] Data is array?', Array.isArray(data));
         console.log('[DEBUG] Data length:', Array.isArray(data) ? data.length : 'N/A');
+        console.log('[DEBUG] Data is null?', data === null);
+        console.log('[DEBUG] Data is undefined?', data === undefined);
+        
+        // Check for network/HTTP errors
+        if (error) {
+            console.error('[DEBUG] ===== ERROR DETAILS =====');
+            console.error('[DEBUG] Error object:', error);
+            console.error('[DEBUG] Error message:', error.message);
+            console.error('[DEBUG] Error code:', error.code);
+            console.error('[DEBUG] Error details:', error.details);
+            console.error('[DEBUG] Error hint:', error.hint);
+            
+            // Check if it's a function not found error
+            if (error.message && error.message.includes('function') && error.message.includes('does not exist')) {
+                console.error('[DEBUG] DIAGNOSIS: Function does not exist in database');
+                console.error('[DEBUG] SOLUTION: Create the waitlist_signup function in Supabase SQL Editor');
+            }
+            
+            // Check if it's a permission error
+            if (error.code === '42501' || (error.message && error.message.includes('permission'))) {
+                console.error('[DEBUG] DIAGNOSIS: Permission denied');
+                console.error('[DEBUG] SOLUTION: Grant EXECUTE permission: GRANT EXECUTE ON FUNCTION waitlist_signup(text) TO anon;');
+            }
+        } else if (data === null || (Array.isArray(data) && data.length === 0)) {
+            console.warn('[DEBUG] ===== EMPTY RESPONSE DIAGNOSIS =====');
+            console.warn('[DEBUG] The function was called successfully but returned empty/null');
+            console.warn('[DEBUG] Possible causes:');
+            console.warn('[DEBUG] 1. Function exists but returns NULL');
+            console.warn('[DEBUG] 2. Function returns TABLE but query returns no rows');
+            console.warn('[DEBUG] 3. Function logic has an error and doesn\'t return anything');
+            console.warn('[DEBUG] 4. Function doesn\'t actually insert data (check function code)');
+            console.warn('[DEBUG] SOLUTION: Check your Supabase function code - it should RETURN a row with added and ok columns');
+        }
         
         if (error) {
             console.error('[DEBUG] Supabase returned an error:', error);
@@ -218,13 +265,29 @@ form.addEventListener('submit', async (e) => {
         if (Array.isArray(data)) {
             console.log('[DEBUG] Response is an array (table), length:', data.length);
             if (data.length === 0) {
-                console.error('[DEBUG] Response array is empty - function returned no rows');
-                showMessage('Something went wrong. Please try again later.', 'error');
+                console.error('[DEBUG] ===== EMPTY ARRAY RESPONSE =====');
+                console.error('[DEBUG] Function returned empty array - no rows returned');
+                console.error('[DEBUG] This means the function executed but returned no data');
+                console.error('[DEBUG] CHECK YOUR SUPABASE FUNCTION:');
+                console.error('[DEBUG] 1. Does it have a RETURN statement?');
+                console.error('[DEBUG] 2. Does it actually insert the email?');
+                console.error('[DEBUG] 3. Does it return a row with {added: bool, ok: bool}?');
+                console.error('[DEBUG] 4. Check function permissions and table permissions');
+                showMessage('Function returned empty result. Check Supabase function code and database permissions.', 'error');
                 return;
             }
             // Get first element if array (table returns array of rows)
             responseData = data[0];
             console.log('[DEBUG] Using first row from table:', responseData);
+        } else if (data === null) {
+            console.error('[DEBUG] ===== NULL RESPONSE =====');
+            console.error('[DEBUG] Function returned NULL');
+            console.error('[DEBUG] CHECK YOUR SUPABASE FUNCTION:');
+            console.error('[DEBUG] 1. Function must RETURN a value (not just execute)');
+            console.error('[DEBUG] 2. If using TABLE return type, it must RETURN QUERY SELECT ...');
+            console.error('[DEBUG] 3. If using JSON return type, it must RETURN json_build_object(...)');
+            showMessage('Function returned null. Check Supabase function return statement.', 'error');
+            return;
         }
         
         // Check if responseData is an object
