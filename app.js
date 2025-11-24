@@ -213,23 +213,18 @@ form.addEventListener('submit', async (e) => {
             return;
         }
         
-        // Handle array response (Supabase RPC might return array)
+        // Handle table/array response (Supabase RPC returns TABLE as array)
         let responseData = data;
         if (Array.isArray(data)) {
-            console.log('[DEBUG] Response is an array, length:', data.length);
+            console.log('[DEBUG] Response is an array (table), length:', data.length);
             if (data.length === 0) {
-                console.error('[DEBUG] Response array is empty');
-                console.error('[DEBUG] DIAGNOSIS: This usually means:');
-                console.error('[DEBUG] 1. Function returns TABLE type but query returns no rows');
-                console.error('[DEBUG] 2. Function should return JSON but is configured as TABLE');
-                console.error('[DEBUG] 3. Function exists but returns NULL');
-                console.error('[DEBUG] SOLUTION: Check Supabase function return type - should be JSON, not TABLE');
-                showMessage('Function returned empty result. Please check Supabase function configuration.', 'error');
+                console.error('[DEBUG] Response array is empty - function returned no rows');
+                showMessage('Something went wrong. Please try again later.', 'error');
                 return;
             }
-            // Get first element if array
+            // Get first element if array (table returns array of rows)
             responseData = data[0];
-            console.log('[DEBUG] Using first element of array:', responseData);
+            console.log('[DEBUG] Using first row from table:', responseData);
         }
         
         // Check if responseData is an object
@@ -240,16 +235,18 @@ form.addEventListener('submit', async (e) => {
             return;
         }
         
-        // Extract values from response
+        // Extract values from response (table row should have 'added' and 'ok' columns)
         const { added, ok } = responseData;
         console.log('[DEBUG] Extracted values - added:', added, 'ok:', ok);
         console.log('[DEBUG] added type:', typeof added, 'ok type:', typeof ok);
         console.log('[DEBUG] Full responseData object:', responseData);
+        console.log('[DEBUG] All available columns/keys:', Object.keys(responseData));
         
         // Check if both properties exist
         if (added === undefined || ok === undefined) {
             console.error('[DEBUG] Missing required properties in response');
             console.error('[DEBUG] Available properties:', Object.keys(responseData));
+            console.error('[DEBUG] Expected: added (boolean) and ok (boolean)');
             showMessage('Something went wrong. Please try again later.', 'error');
             return;
         }
