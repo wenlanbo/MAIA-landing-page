@@ -6,32 +6,35 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 console.log('[DEBUG] Initializing Supabase client...');
 console.log('[DEBUG] Supabase URL:', SUPABASE_URL);
 console.log('[DEBUG] Supabase Key (first 20 chars):', SUPABASE_ANON_KEY.substring(0, 20) + '...');
-console.log('[DEBUG] Supabase library available:', typeof supabase !== 'undefined');
-console.log('[DEBUG] Window.supabase available:', typeof window.supabase !== 'undefined');
 
 // Initialize Supabase client
-// Supabase v2 CDN exposes 'supabase' globally
-let supabaseClient;
-try {
-    if (typeof supabase !== 'undefined' && supabase.createClient) {
-        // Use global supabase object (correct for v2 CDN)
-        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    // Check for Supabase library on window object to avoid variable name conflicts
+    let supabaseClient;
+    try {
+        // Check for Supabase library - only use window object to avoid variable name conflicts
+        // The CDN exposes it as window.supabase
+        const SupabaseLib = window.supabase;
+    
+    console.log('[DEBUG] Supabase library available:', !!SupabaseLib);
+    console.log('[DEBUG] Supabase library type:', typeof SupabaseLib);
+    
+    if (SupabaseLib && SupabaseLib.createClient) {
+        // Use Supabase library to create client
+        supabaseClient = SupabaseLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
             auth: {
                 persistSession: false
+            },
+            global: {
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY
+                }
             }
         });
-        console.log('[DEBUG] Using global supabase.createClient()');
-    } else if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
-        // Fallback to window.supabase
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: {
-                persistSession: false
-            }
-        });
-        console.log('[DEBUG] Using window.supabase.createClient()');
+        console.log('[DEBUG] Using Supabase.createClient() - Success');
     } else {
         console.error('[DEBUG] Supabase library not found!');
         console.error('[DEBUG] Available globals:', Object.keys(window).filter(k => k.toLowerCase().includes('supabase')));
+        console.error('[DEBUG] Window object keys (first 20):', Object.keys(window).slice(0, 20));
         throw new Error('Supabase library not loaded. Make sure the script tag loads before app.js');
     }
     
@@ -43,12 +46,21 @@ try {
         console.log('[DEBUG] Supabase client has rpc method: OK');
     } else {
         console.error('[DEBUG] Supabase client missing rpc method!');
+        console.error('[DEBUG] Available methods:', Object.keys(supabaseClient || {}));
+    }
+    
+    // Verify API key is stored in client
+    if (supabaseClient) {
+        console.log('[DEBUG] Client URL:', supabaseClient.supabaseUrl);
+        console.log('[DEBUG] Client key exists:', !!supabaseClient.supabaseKey);
     }
 } catch (error) {
     console.error('[DEBUG] Error creating Supabase client:', error);
+    console.error('[DEBUG] Error stack:', error.stack);
     throw error;
 }
 
+// Export client as 'supabase' for use in the rest of the code
 const supabase = supabaseClient;
 
 // DOM elements
