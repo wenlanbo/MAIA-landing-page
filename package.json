@@ -1,0 +1,12 @@
+{
+  "name": "maia-landing-page",
+  "version": "1.0.0",
+  "description": "Landing page with Supabase waitlist integration",
+  "scripts": {
+    "serve": "npx serve ."
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}
+

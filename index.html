@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAIA - Join the Waitlist</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="landing-content">
+            <h1 class="title">Welcome to MAIA</h1>
+            <p class="subtitle">Join our waitlist to be the first to know when we launch</p>
+            
+            <form id="waitlist-form" class="waitlist-form">
+                <div class="input-group">
+                    <input 
+                        type="email" 
+                        id="email-input" 
+                        placeholder="Enter your email address" 
+                        required
+                        autocomplete="email"
+                    >
+                    <span class="error-message" id="email-error"></span>
+                </div>
+                
+                <button type="submit" id="submit-btn" class="submit-btn">
+                    <span id="btn-text">Join Waitlist</span>
+                    <span id="btn-loader" class="loader" style="display: none;"></span>
+                </button>
+            </form>
+            
+            <div id="message" class="message" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+
