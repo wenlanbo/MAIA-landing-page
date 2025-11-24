@@ -125,6 +125,17 @@ form.addEventListener('submit', async (e) => {
                 hint: error.hint,
                 code: error.code
             });
+            
+            // Provide user-friendly error messages based on error code
+            if (error.code === '42883') {
+                showMessage('Function not found. Please check Supabase setup.', 'error');
+            } else if (error.code === '42501') {
+                showMessage('Permission denied. Please check Supabase permissions.', 'error');
+            } else if (error.code === 'PGRST301') {
+                showMessage('Function not available. Please check Supabase API configuration.', 'error');
+            } else {
+                showMessage(`Error: ${error.message || 'Something went wrong. Please try again later.'}`, 'error');
+            }
             throw error;
         }
         
@@ -147,7 +158,12 @@ form.addEventListener('submit', async (e) => {
             console.log('[DEBUG] Response is an array, length:', data.length);
             if (data.length === 0) {
                 console.error('[DEBUG] Response array is empty');
-                showMessage('Something went wrong. Please try again later.', 'error');
+                console.error('[DEBUG] DIAGNOSIS: This usually means:');
+                console.error('[DEBUG] 1. Function returns TABLE type but query returns no rows');
+                console.error('[DEBUG] 2. Function should return JSON but is configured as TABLE');
+                console.error('[DEBUG] 3. Function exists but returns NULL');
+                console.error('[DEBUG] SOLUTION: Check Supabase function return type - should be JSON, not TABLE');
+                showMessage('Function returned empty result. Please check Supabase function configuration.', 'error');
                 return;
             }
             // Get first element if array
@@ -238,7 +254,76 @@ emailInput.addEventListener('input', () => {
     }
 });
 
+// Test Supabase connection and RPC function
+async function testSupabaseConnection() {
+    console.log('[DEBUG] ===== Testing Supabase Connection =====');
+    
+    // Test 1: Check if Supabase client is working
+    try {
+        const { data: healthCheck, error: healthError } = await supabase.from('_test').select('*').limit(0);
+        console.log('[DEBUG] Supabase client connection:', healthError ? 'Error' : 'OK');
+        if (healthError) {
+            console.log('[DEBUG] Health check error (expected for non-existent table):', healthError.message);
+        }
+    } catch (e) {
+        console.log('[DEBUG] Supabase client test:', 'OK (error is expected)');
+    }
+    
+    // Test 2: Try to call the RPC function with a test email
+    console.log('[DEBUG] Testing RPC function: waitlist_signup');
+    try {
+        const testEmail = 'test@example.com';
+        const { data, error } = await supabase.rpc('waitlist_signup', {
+            p_email: testEmail
+        });
+        
+        console.log('[DEBUG] RPC Test Response:');
+        console.log('[DEBUG] - Error:', error);
+        console.log('[DEBUG] - Data:', data);
+        console.log('[DEBUG] - Data type:', typeof data);
+        console.log('[DEBUG] - Is Array:', Array.isArray(data));
+        
+        if (error) {
+            console.error('[DEBUG] RPC Function Error Details:');
+            console.error('[DEBUG] - Message:', error.message);
+            console.error('[DEBUG] - Code:', error.code);
+            console.error('[DEBUG] - Details:', error.details);
+            console.error('[DEBUG] - Hint:', error.hint);
+            
+            // Common error codes
+            if (error.code === '42883') {
+                console.error('[DEBUG] ISSUE: Function does not exist or parameter mismatch');
+                console.error('[DEBUG] SOLUTION: Check that function "waitlist_signup" exists and accepts parameter "p_email"');
+            } else if (error.code === '42501') {
+                console.error('[DEBUG] ISSUE: Permission denied');
+                console.error('[DEBUG] SOLUTION: Grant EXECUTE permission on function to anon role');
+            } else if (error.code === 'PGRST301') {
+                console.error('[DEBUG] ISSUE: Function not found in API schema');
+                console.error('[DEBUG] SOLUTION: Function may not be exposed to the API');
+            }
+        } else if (Array.isArray(data) && data.length === 0) {
+            console.warn('[DEBUG] ISSUE: Function returns empty array');
+            console.warn('[DEBUG] POSSIBLE CAUSES:');
+            console.warn('[DEBUG] 1. Function exists but returns NULL or nothing');
+            console.warn('[DEBUG] 2. Function returns TABLE type but query returns no rows');
+            console.warn('[DEBUG] 3. Function should return JSON but returns TABLE instead');
+        } else if (data === null) {
+            console.warn('[DEBUG] ISSUE: Function returns NULL');
+            console.warn('[DEBUG] SOLUTION: Function should return a JSON object with {added: bool, ok: bool}');
+        }
+    } catch (e) {
+        console.error('[DEBUG] RPC Test Exception:', e);
+    }
+    
+    console.log('[DEBUG] ===== End Connection Test =====');
+}
+
 // Debug: Log when page is fully loaded
 console.log('[DEBUG] Page loaded, script initialized');
 console.log('[DEBUG] Supabase library available:', typeof window.supabase !== 'undefined');
+
+// Run connection test after a short delay to ensure everything is loaded
+setTimeout(() => {
+    testSupabaseConnection();
+}, 1000);
 
