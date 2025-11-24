@@ -114,6 +114,8 @@ form.addEventListener('submit', async (e) => {
         console.log('[DEBUG] Supabase RPC call completed');
         console.log('[DEBUG] Response data:', JSON.stringify(data, null, 2));
         console.log('[DEBUG] Response error:', error);
+        console.log('[DEBUG] Data is array?', Array.isArray(data));
+        console.log('[DEBUG] Data length:', Array.isArray(data) ? data.length : 'N/A');
         
         if (error) {
             console.error('[DEBUG] Supabase returned an error:', error);
@@ -129,18 +131,51 @@ form.addEventListener('submit', async (e) => {
         // Handle response
         console.log('[DEBUG] Processing response data...');
         console.log('[DEBUG] Data type:', typeof data);
+        console.log('[DEBUG] Is Array:', Array.isArray(data));
         console.log('[DEBUG] Data value:', data);
         
-        // Check if data exists and has the expected structure
-        if (!data) {
+        // Check if data exists
+        if (data === null || data === undefined) {
             console.error('[DEBUG] Response data is null or undefined');
             showMessage('Something went wrong. Please try again later.', 'error');
             return;
         }
         
-        const { added, ok } = data;
+        // Handle array response (Supabase RPC might return array)
+        let responseData = data;
+        if (Array.isArray(data)) {
+            console.log('[DEBUG] Response is an array, length:', data.length);
+            if (data.length === 0) {
+                console.error('[DEBUG] Response array is empty');
+                showMessage('Something went wrong. Please try again later.', 'error');
+                return;
+            }
+            // Get first element if array
+            responseData = data[0];
+            console.log('[DEBUG] Using first element of array:', responseData);
+        }
+        
+        // Check if responseData is an object
+        if (typeof responseData !== 'object' || responseData === null) {
+            console.error('[DEBUG] Response data is not an object:', typeof responseData);
+            console.error('[DEBUG] Response data value:', responseData);
+            showMessage('Something went wrong. Please try again later.', 'error');
+            return;
+        }
+        
+        // Extract values from response
+        const { added, ok } = responseData;
         console.log('[DEBUG] Extracted values - added:', added, 'ok:', ok);
         console.log('[DEBUG] added type:', typeof added, 'ok type:', typeof ok);
+        console.log('[DEBUG] Full responseData object:', responseData);
+        
+        // Check if both properties exist
+        if (added === undefined || ok === undefined) {
+            console.error('[DEBUG] Missing required properties in response');
+            console.error('[DEBUG] Available properties:', Object.keys(responseData));
+            showMessage('Something went wrong. Please try again later.', 'error');
+            return;
+        }
         
         if (added && ok) {
             // Success: email added to waitlist
@@ -158,7 +193,7 @@ form.addEventListener('submit', async (e) => {
         } else {
             // Unexpected response structure
             console.warn('[DEBUG] Warning: Unexpected response structure');
-            console.warn('[DEBUG] Full data object:', data);
+            console.warn('[DEBUG] Full responseData object:', responseData);
             showMessage('Something went wrong. Please try again later.', 'error');
         }
         
