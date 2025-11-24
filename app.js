@@ -1,7 +1,7 @@
 // Initialize Supabase client
 // Replace these with your actual Supabase credentials
 const SUPABASE_URL = 'https://pbqlcshddndltrojbibd.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_secret_JNcotX7YZu3xy473NZRlDw_EMTIM4TC';
+const SUPABASE_ANON_KEY = 'sb_publishable_ejxZpw66VQz9f1_v2Ewz2A_E6HB6PJQ';
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
