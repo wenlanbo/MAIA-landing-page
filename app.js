@@ -1,7 +1,7 @@
 // Initialize Supabase client
 // Replace these with your actual Supabase credentials
 const SUPABASE_URL = 'https://pbqlcshddndltrojbibd.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_ejxZpw66VQz9f1_v2Ewz2A_E6HB6PJQ';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBicWxjc2hkZG5kbHRyb2piaWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2NTg0NTksImV4cCI6MjA3OTIzNDQ1OX0.LETFcKQLfOosqU6AEVx-2nOKrX7lWhd4RhMPmI1CntU';
 
 console.log('[DEBUG] Initializing Supabase client...');
 console.log('[DEBUG] Supabase URL:', SUPABASE_URL);
