@@ -66,7 +66,11 @@ const supabase = supabaseClient;
 // DOM elements
 console.log('[DEBUG] Getting DOM elements...');
 const form = document.getElementById('waitlist-form');
+const nameInput = document.getElementById('name-input');
+const orgInput = document.getElementById('org-input');
 const emailInput = document.getElementById('email-input');
+const nameError = document.getElementById('name-error');
+const orgError = document.getElementById('org-error');
 const emailError = document.getElementById('email-error');
 const submitBtn = document.getElementById('submit-btn');
 const btnText = document.getElementById('btn-text');
@@ -75,6 +79,8 @@ const messageDiv = document.getElementById('message');
 
 console.log('[DEBUG] DOM elements check:');
 console.log('[DEBUG] - form:', form ? 'Found' : 'NOT FOUND');
+console.log('[DEBUG] - nameInput:', nameInput ? 'Found' : 'NOT FOUND');
+console.log('[DEBUG] - orgInput:', orgInput ? 'Found' : 'NOT FOUND');
 console.log('[DEBUG] - emailInput:', emailInput ? 'Found' : 'NOT FOUND');
 console.log('[DEBUG] - submitBtn:', submitBtn ? 'Found' : 'NOT FOUND');
 console.log('[DEBUG] - messageDiv:', messageDiv ? 'Found' : 'NOT FOUND');
@@ -88,15 +94,39 @@ function validateEmail(email) {
 }
 
 // Show error message
-function showError(message) {
-    emailError.textContent = message;
-    emailInput.classList.add('invalid');
+function showError(message, field) {
+    if (field === 'name') {
+        nameError.textContent = message;
+        nameInput.classList.add('invalid');
+    } else if (field === 'org') {
+        orgError.textContent = message;
+        orgInput.classList.add('invalid');
+    } else if (field === 'email') {
+        emailError.textContent = message;
+        emailInput.classList.add('invalid');
+    }
 }
 
 // Clear error message
-function clearError() {
-    emailError.textContent = '';
-    emailInput.classList.remove('invalid');
+function clearError(field) {
+    if (field === 'name') {
+        nameError.textContent = '';
+        nameInput.classList.remove('invalid');
+    } else if (field === 'org') {
+        orgError.textContent = '';
+        orgInput.classList.remove('invalid');
+    } else if (field === 'email') {
+        emailError.textContent = '';
+        emailInput.classList.remove('invalid');
+    } else {
+        // Clear all errors
+        nameError.textContent = '';
+        orgError.textContent = '';
+        emailError.textContent = '';
+        nameInput.classList.remove('invalid');
+        orgInput.classList.remove('invalid');
+        emailInput.classList.remove('invalid');
+    }
 }
 
 // Show message to user
@@ -129,27 +159,46 @@ form.addEventListener('submit', async (e) => {
     e.preventDefault();
     console.log('[DEBUG] Form submitted');
     
+    const name = nameInput.value.trim();
+    const org = orgInput.value.trim();
     const email = emailInput.value.trim();
-    console.log('[DEBUG] Email entered:', email);
+    
+    console.log('[DEBUG] Form data:', { name, org, email });
     
     // Clear previous errors
     clearError();
     messageDiv.style.display = 'none';
     
-    // Validate email format
+    // Validate all fields
+    let hasError = false;
+    
+    if (!name) {
+        console.log('[DEBUG] Validation failed: Empty name');
+        showError('Please enter your name', 'name');
+        hasError = true;
+    }
+    
+    if (!org) {
+        console.log('[DEBUG] Validation failed: Empty organization');
+        showError('Please enter your organization', 'org');
+        hasError = true;
+    }
+    
     if (!email) {
         console.log('[DEBUG] Validation failed: Empty email');
-        showError('Please enter an email address');
-        return;
-    }
-    
-    if (!validateEmail(email)) {
+        showError('Please enter an email address', 'email');
+        hasError = true;
+    } else if (!validateEmail(email)) {
         console.log('[DEBUG] Validation failed: Invalid email format');
-        showError('Please enter a valid email address');
+        showError('Please enter a valid email address', 'email');
+        hasError = true;
+    }
+    
+    if (hasError) {
         return;
     }
     
-    console.log('[DEBUG] Email validation passed');
+    console.log('[DEBUG] All validations passed');
     
     // Set loading state
     setLoading(true);
@@ -157,7 +206,7 @@ form.addEventListener('submit', async (e) => {
     
     try {
         console.log('[DEBUG] Calling Supabase RPC function: waitlist_signup');
-        console.log('[DEBUG] Parameters:', { p_email: email });
+        console.log('[DEBUG] Parameters:', { p_name: name, p_org: org, p_email: email });
         console.log('[DEBUG] Supabase client URL:', supabase?.supabaseUrl);
         console.log('[DEBUG] Supabase client key exists:', !!supabase?.supabaseKey);
         console.log('[DEBUG] Supabase client key (first 20 chars):', supabase?.supabaseKey?.substring(0, 20) || 'NOT FOUND');
@@ -171,13 +220,15 @@ form.addEventListener('submit', async (e) => {
         console.log('[DEBUG] Making RPC call to waitlist_signup...');
         console.log('[DEBUG] Full request details:', {
             function: 'waitlist_signup',
-            params: { p_email: email },
+            params: { p_name: name, p_org: org, p_email: email },
             url: supabase?.supabaseUrl,
             hasKey: !!supabase?.supabaseKey
         });
         
         // Make the RPC call
         const rpcResponse = await supabase.rpc('waitlist_signup', {
+            p_name: name,
+            p_org: org,
             p_email: email
         });
         
@@ -212,7 +263,7 @@ form.addEventListener('submit', async (e) => {
             // Check if it's a permission error
             if (error.code === '42501' || (error.message && error.message.includes('permission'))) {
                 console.error('[DEBUG] DIAGNOSIS: Permission denied');
-                console.error('[DEBUG] SOLUTION: Grant EXECUTE permission: GRANT EXECUTE ON FUNCTION waitlist_signup(text) TO anon;');
+                console.error('[DEBUG] SOLUTION: Grant EXECUTE permission: GRANT EXECUTE ON FUNCTION waitlist_signup(text, text, text) TO anon;');
             }
         } else if (data === null || (Array.isArray(data) && data.length === 0)) {
             console.warn('[DEBUG] ===== EMPTY RESPONSE DIAGNOSIS =====');
@@ -317,7 +368,10 @@ form.addEventListener('submit', async (e) => {
         if (added && ok) {
             // Success: email added to waitlist
             console.log('[DEBUG] Success: Email added to waitlist');
-            showMessage('Your email has been successfully added to the waitlist!', 'success');
+            showMessage('Your information has been successfully added to the waitlist!', 'success');
+            // Clear all form fields
+            nameInput.value = '';
+            orgInput.value = '';
             emailInput.value = '';
         } else if (!added && ok) {
             // Email already registered
@@ -358,20 +412,50 @@ form.addEventListener('submit', async (e) => {
     }
 });
 
-// Real-time email validation
+// Real-time validation
+nameInput.addEventListener('blur', () => {
+    const name = nameInput.value.trim();
+    if (!name) {
+        showError('Please enter your name', 'name');
+    } else {
+        clearError('name');
+    }
+});
+
+orgInput.addEventListener('blur', () => {
+    const org = orgInput.value.trim();
+    if (!org) {
+        showError('Please enter your organization', 'org');
+    } else {
+        clearError('org');
+    }
+});
+
 emailInput.addEventListener('blur', () => {
     const email = emailInput.value.trim();
     if (email && !validateEmail(email)) {
-        showError('Please enter a valid email address');
+        showError('Please enter a valid email address', 'email');
     } else {
-        clearError();
+        clearError('email');
     }
 });
 
 // Clear error on input
+nameInput.addEventListener('input', () => {
+    if (nameInput.classList.contains('invalid')) {
+        clearError('name');
+    }
+});
+
+orgInput.addEventListener('input', () => {
+    if (orgInput.classList.contains('invalid')) {
+        clearError('org');
+    }
+});
+
 emailInput.addEventListener('input', () => {
     if (emailInput.classList.contains('invalid')) {
-        clearError();
+        clearError('email');
     }
 });
 

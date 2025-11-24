@@ -18,6 +18,28 @@
             <form id="waitlist-form" class="waitlist-form">
                 <div class="input-group">
                     <input 
+                        type="text" 
+                        id="name-input" 
+                        placeholder="Enter your name" 
+                        required
+                        autocomplete="name"
+                    >
+                    <span class="error-message" id="name-error"></span>
+                </div>
+                
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="org-input" 
+                        placeholder="Enter your organization" 
+                        required
+                        autocomplete="organization"
+                    >
+                    <span class="error-message" id="org-error"></span>
+                </div>
+                
+                <div class="input-group">
+                    <input 
                         type="email" 
                         id="email-input" 
                         placeholder="Enter your email address" 
