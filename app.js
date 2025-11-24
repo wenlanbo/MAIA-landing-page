@@ -6,9 +6,50 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 console.log('[DEBUG] Initializing Supabase client...');
 console.log('[DEBUG] Supabase URL:', SUPABASE_URL);
 console.log('[DEBUG] Supabase Key (first 20 chars):', SUPABASE_ANON_KEY.substring(0, 20) + '...');
+console.log('[DEBUG] Supabase library available:', typeof supabase !== 'undefined');
+console.log('[DEBUG] Window.supabase available:', typeof window.supabase !== 'undefined');
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-console.log('[DEBUG] Supabase client created:', supabase ? 'Success' : 'Failed');
+// Initialize Supabase client
+// Supabase v2 CDN exposes 'supabase' globally
+let supabaseClient;
+try {
+    if (typeof supabase !== 'undefined' && supabase.createClient) {
+        // Use global supabase object (correct for v2 CDN)
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                persistSession: false
+            }
+        });
+        console.log('[DEBUG] Using global supabase.createClient()');
+    } else if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+        // Fallback to window.supabase
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                persistSession: false
+            }
+        });
+        console.log('[DEBUG] Using window.supabase.createClient()');
+    } else {
+        console.error('[DEBUG] Supabase library not found!');
+        console.error('[DEBUG] Available globals:', Object.keys(window).filter(k => k.toLowerCase().includes('supabase')));
+        throw new Error('Supabase library not loaded. Make sure the script tag loads before app.js');
+    }
+    
+    console.log('[DEBUG] Supabase client created:', supabaseClient ? 'Success' : 'Failed');
+    console.log('[DEBUG] Supabase client type:', typeof supabaseClient);
+    
+    // Verify the client has the expected methods
+    if (supabaseClient && supabaseClient.rpc) {
+        console.log('[DEBUG] Supabase client has rpc method: OK');
+    } else {
+        console.error('[DEBUG] Supabase client missing rpc method!');
+    }
+} catch (error) {
+    console.error('[DEBUG] Error creating Supabase client:', error);
+    throw error;
+}
+
+const supabase = supabaseClient;
 
 // DOM elements
 console.log('[DEBUG] Getting DOM elements...');
@@ -105,6 +146,14 @@ form.addEventListener('submit', async (e) => {
     try {
         console.log('[DEBUG] Calling Supabase RPC function: waitlist_signup');
         console.log('[DEBUG] Parameters:', { p_email: email });
+        console.log('[DEBUG] Supabase client URL:', supabase?.supabaseUrl);
+        console.log('[DEBUG] Supabase client key exists:', !!supabase?.supabaseKey);
+        console.log('[DEBUG] Supabase client key (first 20 chars):', supabase?.supabaseKey?.substring(0, 20) || 'NOT FOUND');
+        
+        // Verify client is properly initialized
+        if (!supabase || !supabase.rpc) {
+            throw new Error('Supabase client not properly initialized');
+        }
         
         // Call Supabase RPC function
         const { data, error } = await supabase.rpc('waitlist_signup', {
