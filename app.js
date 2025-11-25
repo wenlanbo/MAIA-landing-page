@@ -465,10 +465,10 @@ console.log('[DEBUG] Supabase library available:', typeof window.supabase !== 'u
 
 // Typewriter Animation
 const typewriterTexts = [
-    "Show me the exact location of the lesion",
-    "Where is this structure relative to landmarks?",
+    "Segment the tumor",
     "What's the recommended trajectory?",
-    "Segment the tumor"
+    "Show me the exact location of the lesion",
+    "Where is this structure relative to landmarks?"    
 ];
 
 const opacityValues = [1.0, 0.5, 0.3, 0.2]; // 100%, 50%, 30%, 20% from bottom to top
@@ -477,67 +477,64 @@ function initTypewriter() {
     const container = document.getElementById('typewriter-container');
     if (!container) return;
     
-    let currentLineIndex = 0;
+    let currentTextIndex = 0; // Index in typewriterTexts array (cycles through)
     let currentCharIndex = 0;
-    const lines = [];
-    
-    // Create all line elements
-    typewriterTexts.forEach((text, index) => {
-        const line = document.createElement('div');
-        line.className = 'typewriter-line';
-        line.style.opacity = '0';
-        container.appendChild(line);
-        lines.push(line);
-    });
+    const lines = []; // Array of DOM elements for visible lines
     
     function typeNextChar() {
-        if (currentLineIndex >= typewriterTexts.length) {
-            // All lines completed, restart animation
-            setTimeout(() => {
-                // Reset all lines
-                lines.forEach((line) => {
-                    line.textContent = '';
-                    line.style.opacity = '0';
-                });
-                currentLineIndex = 0;
-                currentCharIndex = 0;
-                typeNextChar();
-            }, 2000); // Wait 2 seconds before restarting
-            return;
+        // If we have 4 lines visible, remove the top (oldest) line
+        if (lines.length >= 4) {
+            const topLine = lines.shift(); // Remove first line
+            topLine.remove(); // Remove from DOM
         }
         
-        // Lines are added in order, so the current line is at the bottom
-        // We need to insert new lines at the bottom, so we prepend them
-        const currentLine = lines[currentLineIndex];
-        const currentText = typewriterTexts[currentLineIndex];
+        // Create new line at the bottom if needed
+        let currentLine;
+        if (lines.length === 0 || currentCharIndex === 0) {
+            currentLine = document.createElement('div');
+            currentLine.className = 'typewriter-line';
+            currentLine.style.opacity = '0';
+            container.appendChild(currentLine);
+            lines.push(currentLine);
+        } else {
+            currentLine = lines[lines.length - 1]; // Get the last (bottom) line
+        }
+        
+        const currentText = typewriterTexts[currentTextIndex];
         
         if (currentCharIndex < currentText.length) {
             // Type next character
             currentLine.textContent = currentText.substring(0, currentCharIndex + 1);
-            // Current line (bottom) gets 100% opacity while typing
-            currentLine.style.opacity = opacityValues[0].toString();
+            // Update opacities for all visible lines immediately
+            updateOpacities();
             currentCharIndex++;
             
             // Continue typing this line
             setTimeout(typeNextChar, 50); // 50ms delay between characters
         } else {
-            // Line is complete, update opacities for all visible lines
-            // Bottom line (most recent) = 100%, second = 50%, third = 30%, fourth = 20%
-            for (let i = 0; i <= currentLineIndex; i++) {
-                const line = lines[i];
-                // Position from bottom: 0 = bottom (most recent), 1 = second, etc.
-                const positionFromBottom = currentLineIndex - i;
-                if (positionFromBottom < opacityValues.length) {
-                    line.style.opacity = opacityValues[positionFromBottom].toString();
-                }
-            }
+            // Line is complete, update opacities immediately
+            updateOpacities();
             
-            // Move to next line
-            currentLineIndex++;
+            // Move to next text in cycle
+            currentTextIndex = (currentTextIndex + 1) % typewriterTexts.length;
             currentCharIndex = 0;
             
             // Start typing next line immediately
             setTimeout(typeNextChar, 100); // Small delay before starting next line
+        }
+    }
+    
+    function updateOpacities() {
+        // Update opacities for all visible lines
+        // Bottom line (most recent) = 100%, second = 50%, third = 30%, fourth = 20%
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const positionFromBottom = lines.length - 1 - i; // 0 = bottom, 1 = second, etc.
+            if (positionFromBottom < opacityValues.length) {
+                line.style.opacity = opacityValues[positionFromBottom].toString();
+            } else {
+                line.style.opacity = opacityValues[opacityValues.length - 1].toString(); // Use lowest opacity
+            }
         }
     }
     
