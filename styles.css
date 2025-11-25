@@ -399,16 +399,16 @@ body.video-mode .video-overlay {
 }
 
 .maia-logo {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 40px;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 30px;
 }
 
 .video-subtitle {
     font-family: 'TTCommonsPro-Regular', sans-serif;
     font-size: 32px;
     font-weight: 400;
-    margin: 0 0 40px 0;
+    margin: 0 0 30px 0;
     background: linear-gradient(to right, 
         #38867A 0%,
         #63ECD6 45%,
@@ -424,7 +424,7 @@ body.video-mode .video-overlay {
     font-size: 48px;
     font-weight: 400;
     color: #fff;
-    margin: 0 0 40px 0;
+    margin: 0 0 30px 0;
     text-align: center;
 }
 
