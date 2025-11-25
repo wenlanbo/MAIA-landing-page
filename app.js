@@ -479,9 +479,13 @@ function initTypewriter() {
     
     let currentTextIndex = 0; // Index in typewriterTexts array (cycles through)
     let currentCharIndex = 0;
-    const lines = []; // Array of DOM elements for visible lines
+    const lines = []; // Array of DOM elements: [0]=top, [1]=second, [2]=third, [3]=bottom (container 0)
     
-    // Pre-create 4 empty line containers
+    // Pre-create 4 empty line containers (top to bottom: 3, 2, 1, 0)
+    // lines[0] = container 3 (top)
+    // lines[1] = container 2
+    // lines[2] = container 1
+    // lines[3] = container 0 (bottom, where typing happens)
     for (let i = 0; i < 4; i++) {
         const line = document.createElement('div');
         line.className = 'typewriter-line';
@@ -492,34 +496,41 @@ function initTypewriter() {
     }
     
     function typeNextChar() {
-        // Get the current line (we'll cycle through the 4 containers)
-        // The bottom line is always the last one in the array
-        const currentLine = lines[lines.length - 1];
-        
+        // Container 0 (bottom) is always lines[3] - this is where typing happens
+        const container0 = lines[3];
         const currentText = typewriterTexts[currentTextIndex];
         
         if (currentCharIndex < currentText.length) {
-            // Type next character
-            currentLine.textContent = currentText.substring(0, currentCharIndex + 1);
-            // Update opacities for all visible lines immediately
+            // Type next character in container 0 (bottom)
+            container0.textContent = currentText.substring(0, currentCharIndex + 1);
+            // Update opacities for all containers immediately
             updateOpacities();
             currentCharIndex++;
             
             // Continue typing this line
             setTimeout(typeNextChar, 50); // 50ms delay between characters
         } else {
-            // Line is complete, update opacities immediately
-            updateOpacities();
+            // Line is complete in container 0
+            // Shift all texts up: 0→1, 1→2, 2→3, 3→0 (restart)
+            const textFrom0 = container0.textContent; // Save text from container 0
             
-            // Move all lines up: remove top line and add new empty line at bottom
-            const topLine = lines.shift(); // Remove first (top) line
-            topLine.textContent = ''; // Clear its content
-            topLine.style.opacity = '0';
-            lines.push(topLine); // Add it back at the bottom
+            // Move texts up: 2→3, 1→2, 0→1
+            lines[3].textContent = lines[2].textContent; // 2→3
+            lines[2].textContent = lines[1].textContent; // 1→2
+            lines[1].textContent = lines[0].textContent; // 0→1
+            
+            // Container 3 (top) gets the text from container 0, then container 0 will get new text
+            lines[0].textContent = textFrom0;
+            
+            // Update opacities immediately
+            updateOpacities();
             
             // Move to next text in cycle
             currentTextIndex = (currentTextIndex + 1) % typewriterTexts.length;
             currentCharIndex = 0;
+            
+            // Clear container 0 and start typing new text
+            container0.textContent = '';
             
             // Start typing next line immediately
             setTimeout(typeNextChar, 100); // Small delay before starting next line
@@ -527,15 +538,21 @@ function initTypewriter() {
     }
     
     function updateOpacities() {
-        // Update opacities for all visible lines
-        // Bottom line (most recent) = 100%, second = 50%, third = 30%, fourth = 20%
-        for (let i = 0; i < lines.length; i++) {
+        // Update opacities for all containers
+        // Container 0 (bottom, lines[3]) = 100%, Container 1 (lines[2]) = 50%, Container 2 (lines[1]) = 30%, Container 3 (lines[0]) = 20%
+        // Position from bottom: 0 = bottom (container 0), 1 = container 1, 2 = container 2, 3 = container 3 (top)
+        for (let i = 0; i < 4; i++) {
             const line = lines[i];
-            const positionFromBottom = lines.length - 1 - i; // 0 = bottom, 1 = second, etc.
+            const positionFromBottom = 3 - i; // 3→0, 2→1, 1→2, 0→3
             if (positionFromBottom < opacityValues.length) {
-                line.style.opacity = opacityValues[positionFromBottom].toString();
+                // Only show opacity if container has text
+                if (line.textContent.trim() !== '') {
+                    line.style.opacity = opacityValues[positionFromBottom].toString();
+                } else {
+                    line.style.opacity = '0';
+                }
             } else {
-                line.style.opacity = opacityValues[opacityValues.length - 1].toString(); // Use lowest opacity
+                line.style.opacity = opacityValues[opacityValues.length - 1].toString();
             }
         }
     }
