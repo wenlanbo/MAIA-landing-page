@@ -60,15 +60,20 @@ body.loaded .logo {
     display: flex;
     width: 100%;
     min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    gap: 0; /* Space between sections will be handled by max-width */
 }
 
 /* Left section */
 .left-section {
-    width: 1106px;
+    max-width: 1106px;
+    width: 100%;
     display: flex;
     align-items: center;
-    padding-left: 140px;
+    justify-content: center;
     position: relative;
+    flex-shrink: 0;
 }
 
 /* Hero title */
@@ -85,6 +90,7 @@ body.loaded .logo {
 /* Right section */
 .right-section {
     flex: 1;
+    max-width: calc(100% - 1106px);
     display: flex;
     align-items: center; /* Center vertically like left section */
     justify-content: center;
@@ -314,7 +320,7 @@ body.loaded .logo {
     z-index: 51; /* Above the black overlay */
     object-fit: contain; /* Maintain aspect ratio while fitting the screen */
     opacity: 0;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 2s ease-in-out;
 }
 
 body.video-mode .placeholder-video {
@@ -325,6 +331,16 @@ body.video-mode .placeholder-video {
 body.video-mode .video-overlay {
     display: block;
     opacity: 1;
+}
+
+/* Fade out first page when transitioning to video */
+.page-container {
+    transition: opacity 2s ease-in-out;
+}
+
+body.video-mode .page-container {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* Waitlist button */
@@ -352,6 +368,7 @@ body.video-mode .video-overlay {
     height: 100%;
     object-fit: cover;
     z-index: 1;
+    border-radius: 0; /* Remove corner radius */
 }
 
 .waitlist-button-text {
@@ -381,6 +398,11 @@ body.video-mode .video-overlay {
     display: none;
     opacity: 0;
     transition: opacity 0.8s ease-in-out;
+    will-change: opacity; /* Prevent content jumping */
+}
+
+.video-content-container {
+    will-change: opacity; /* Prevent content jumping */
 }
 
 .video-content-overlay.show {

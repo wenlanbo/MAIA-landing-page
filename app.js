@@ -704,6 +704,8 @@ function transitionToVideo() {
                             // Remove overlay from display after fade out completes
                             setTimeout(function() {
                                 videoContentOverlay.style.display = 'none';
+                                // Reset opacity to 0 for next time
+                                videoContentOverlay.style.opacity = '0';
                             }, 800); // Match the 0.8s transition duration
                         }
                     }, 5000);
