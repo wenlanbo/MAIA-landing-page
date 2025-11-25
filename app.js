@@ -670,10 +670,9 @@ function transitionToVideo() {
         });
     }
     
-    // Show logo (already positioned, ensure it's above video)
+    // Show logo (already positioned, z-index set in CSS to be above everything)
     if (logo) {
         logo.style.display = 'block';
-        logo.style.zIndex = '100';
     }
     
     // Show waitlist button
