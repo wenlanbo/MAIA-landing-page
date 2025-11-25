@@ -31,6 +31,20 @@ body {
     overflow-x: hidden;
 }
 
+/* Hide content until background image loads */
+body.loading .page-container,
+body.loading .logo {
+    opacity: 0;
+    visibility: hidden;
+}
+
+body.loaded .page-container,
+body.loaded .logo {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-in;
+}
+
 /* Logo in top left */
 .logo {
     position: absolute;
@@ -119,12 +133,10 @@ body {
 /* Loading line */
 .loading-line {
     position: absolute;
-    left: 50%;
+    left: 0; /* Align to left */
     bottom: calc(50% - 50px - 50px); /* Position above the typewriter container (50px above it) */
-    transform: translateX(-50%); /* Center horizontally */
     width: 100%; /* Match typewriter line width (typewriter-line is 100% of container) */
     height: 3px;
-    background-color: rgba(99, 236, 214, 0.2); /* Base line with low opacity */
     overflow: hidden;
 }
 

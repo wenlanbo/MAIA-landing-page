@@ -580,10 +580,35 @@ function initTypewriter() {
     typeNextChar();
 }
 
-// Initialize typewriter when page loads
+// Wait for background image to load before showing content
+function waitForBackgroundImage() {
+    const body = document.body;
+    body.classList.add('loading');
+    
+    const bgImage = new Image();
+    bgImage.src = 'Assets/img/BackgroundLandingPage.png';
+    
+    bgImage.onload = function() {
+        body.classList.remove('loading');
+        body.classList.add('loaded');
+        // Initialize typewriter after image loads
+        initTypewriter();
+    };
+    
+    bgImage.onerror = function() {
+        // If image fails to load, still show content after a delay
+        setTimeout(function() {
+            body.classList.remove('loading');
+            body.classList.add('loaded');
+            initTypewriter();
+        }, 1000);
+    };
+}
+
+// Initialize when page loads
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTypewriter);
+    document.addEventListener('DOMContentLoaded', waitForBackgroundImage);
 } else {
-    initTypewriter();
+    waitForBackgroundImage();
 }
 
