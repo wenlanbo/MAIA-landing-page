@@ -86,7 +86,8 @@ body {
     transform: translateX(-50%); /* Center horizontally */
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Align lines to left */
+    align-items: center; /* Center lines horizontally */
+    justify-content: flex-end; /* Align lines to bottom */
     font-family: 'TTCommonsPro-Regular', sans-serif;
     font-size: 32px;
     color: #fff;
@@ -95,7 +96,7 @@ body {
 }
 
 .typewriter-line {
-    margin-bottom: 35px; /* Space between lines */
+    margin-bottom: 5px; /* Space between lines */
     white-space: nowrap;
     transition: opacity 0s; /* Immediate opacity change */
     text-align: left; /* Left align text within line */
