@@ -588,21 +588,49 @@ function waitForBackgroundImage() {
     const bgImage = new Image();
     bgImage.src = 'Assets/img/BackgroundLandingPage.png';
     
+    // Load video (but don't play it yet)
+    const video = document.getElementById('placeholder-video');
+    let videoLoaded = false;
+    let imageLoaded = false;
+    
+    function checkBothLoaded() {
+        if (videoLoaded && imageLoaded) {
+            body.classList.remove('loading');
+            body.classList.add('loaded');
+            // Initialize typewriter after both load
+            initTypewriter();
+            // After 8 seconds (loading animation) + 2 seconds pause, transition to video
+            setTimeout(transitionToVideo, 10000);
+        }
+    }
+    
     bgImage.onload = function() {
-        body.classList.remove('loading');
-        body.classList.add('loaded');
-        // Initialize typewriter after image loads
-        initTypewriter();
+        imageLoaded = true;
+        checkBothLoaded();
     };
     
     bgImage.onerror = function() {
-        // If image fails to load, still show content after a delay
-        setTimeout(function() {
-            body.classList.remove('loading');
-            body.classList.add('loaded');
-            initTypewriter();
-        }, 1000);
+        // If image fails to load, still proceed
+        imageLoaded = true;
+        checkBothLoaded();
     };
+    
+    if (video) {
+        video.load(); // Start loading the video
+        video.addEventListener('loadeddata', function() {
+            videoLoaded = true;
+            checkBothLoaded();
+        }, { once: true });
+        video.addEventListener('error', function() {
+            // If video fails to load, still proceed
+            videoLoaded = true;
+            checkBothLoaded();
+        }, { once: true });
+    } else {
+        // If video element doesn't exist, proceed without it
+        videoLoaded = true;
+        checkBothLoaded();
+    }
 }
 
 // Initialize when page loads
@@ -615,21 +643,17 @@ if (document.readyState === 'loading') {
 // Transition to video mode: black background, play video, show logo and button
 function transitionToVideo() {
     const body = document.body;
-    const pageContainer = document.querySelector('.page-container');
+    const videoOverlay = document.getElementById('video-overlay');
     const video = document.getElementById('placeholder-video');
     const logo = document.querySelector('.logo');
     const waitlistButton = document.getElementById('waitlist-button');
     
-    // Hide the page container (landing page content)
-    if (pageContainer) {
-        pageContainer.style.display = 'none';
+    // Show black background overlay (keeps original content visible underneath)
+    if (videoOverlay) {
+        videoOverlay.style.display = 'block';
     }
     
-    // Make background black
-    body.style.backgroundColor = '#000';
-    body.style.backgroundImage = 'none';
-    
-    // Show and play video
+    // Show and play video on top of original content
     if (video) {
         video.style.display = 'block';
         video.play().catch(function(error) {
@@ -637,9 +661,10 @@ function transitionToVideo() {
         });
     }
     
-    // Show logo (already positioned)
+    // Show logo (already positioned, ensure it's above video)
     if (logo) {
         logo.style.display = 'block';
+        logo.style.zIndex = '100';
     }
     
     // Show waitlist button
