@@ -481,7 +481,7 @@ function initTypewriter() {
     let currentCharIndex = 0;
     const lines = [];
     
-    // Create all line elements (they'll be added in reverse order due to flex-direction: column-reverse)
+    // Create all line elements
     typewriterTexts.forEach((text, index) => {
         const line = document.createElement('div');
         line.className = 'typewriter-line';
@@ -506,15 +506,15 @@ function initTypewriter() {
             return;
         }
         
-        // Get the line (in reverse order, so index 0 is at bottom)
-        const lineIndex = typewriterTexts.length - 1 - currentLineIndex;
-        const currentLine = lines[lineIndex];
+        // Lines are added in order, so the current line is at the bottom
+        // We need to insert new lines at the bottom, so we prepend them
+        const currentLine = lines[currentLineIndex];
         const currentText = typewriterTexts[currentLineIndex];
         
         if (currentCharIndex < currentText.length) {
             // Type next character
             currentLine.textContent = currentText.substring(0, currentCharIndex + 1);
-            // Bottom line (first line) gets 100% opacity
+            // Current line (bottom) gets 100% opacity while typing
             currentLine.style.opacity = opacityValues[0].toString();
             currentCharIndex++;
             
@@ -524,8 +524,8 @@ function initTypewriter() {
             // Line is complete, update opacities for all visible lines
             // Bottom line (most recent) = 100%, second = 50%, third = 30%, fourth = 20%
             for (let i = 0; i <= currentLineIndex; i++) {
-                const lineIdx = typewriterTexts.length - 1 - i;
-                const line = lines[lineIdx];
+                const line = lines[i];
+                // Position from bottom: 0 = bottom (most recent), 1 = second, etc.
                 const positionFromBottom = currentLineIndex - i;
                 if (positionFromBottom < opacityValues.length) {
                     line.style.opacity = opacityValues[positionFromBottom].toString();

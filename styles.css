@@ -81,10 +81,10 @@ body {
 /* Typewriter animation container */
 .typewriter-container {
     position: absolute;
-    left: 40px; /* Align to left of section (matching padding) */
+    left: 0; /* Align to left of section */
     bottom: 0; /* Bottom align with hero text */
     display: flex;
-    flex-direction: column-reverse; /* Reverse so newest line is at bottom */
+    flex-direction: column;
     align-items: flex-start;
     font-family: 'TTCommonsPro-Regular', sans-serif;
     font-size: 32px;
@@ -93,13 +93,13 @@ body {
 }
 
 .typewriter-line {
-    margin-top: 35px; /* Space between lines (using margin-top since we're reversed) */
+    margin-bottom: 35px; /* Space between lines */
     white-space: nowrap;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.3s ease;
 }
 
-.typewriter-line:first-child {
-    margin-top: 0; /* First line (bottom) has no top margin */
+.typewriter-line:last-child {
+    margin-bottom: 0; /* Last line (bottom) has no bottom margin */
 }
 
 /* Waitlist form styles (hidden but kept for future use) */
