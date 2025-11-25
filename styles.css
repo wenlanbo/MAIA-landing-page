@@ -151,7 +151,7 @@ body.loaded .logo {
         rgba(99, 236, 214, 0) 0%,
         rgba(99, 236, 214, 0.5) 50%,
         rgba(99, 236, 214, 1) 100%);
-    animation: loadingLineProgress 3s ease-in-out forwards; /* One-time animation */
+    animation: loadingLineProgress 8s ease-in-out forwards; /* One-time animation */
 }
 
 @keyframes loadingLineProgress {
