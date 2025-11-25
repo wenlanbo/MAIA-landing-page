@@ -1,18 +1,18 @@
 # MAIA Landing Page
 
-A simple landing page with email validation and Supabase integration for waitlist signups.
+A simple landing page with Supabase integration for waitlist signups.
 
 ## Setup Instructions
 
 1. **Configure Supabase**:
    - Open `app.js`
-   - Replace `YOUR_SUPABASE_URL` with your Supabase project URL
-   - Replace `YOUR_SUPABASE_ANON_KEY` with your Supabase anonymous key
+   - Update `SUPABASE_URL` with your Supabase project URL
+   - Update `SUPABASE_ANON_KEY` with your Supabase anonymous key
 
-2. **Set up Supabase RPC function**:
-   Make sure you have a function called `waitlist_signup` in your Supabase database that:
-   - Takes a parameter `p_email` (text)
-   - Returns an object with `added` (boolean) and `ok` (boolean)
+2. **Set up Supabase Database**:
+   - Create a table called `waitlist` with columns: `name`, `org`, `email`
+   - Create a unique index: `CREATE UNIQUE INDEX waitlist_email_lower_idx ON waitlist (lower(email));`
+   - Copy and paste the function from `waitlist_signup_fixed.sql` into Supabase SQL Editor and run it
 
 3. **Run the application**:
    - Simply open `index.html` in a browser, or
@@ -20,6 +20,7 @@ A simple landing page with email validation and Supabase integration for waitlis
 
 ## Features
 
+- Name, organization, and email collection
 - Email format validation
 - Supabase RPC integration
 - User-friendly error and success messages
