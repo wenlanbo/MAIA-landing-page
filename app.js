@@ -481,17 +481,19 @@ function initTypewriter() {
     let currentCharIndex = 0;
     const lines = []; // Array of DOM elements: [0]=top, [1]=second, [2]=third, [3]=bottom (container 0)
     
-    // Pre-create 4 empty line containers (top to bottom: 3, 2, 1, 0)
-    // lines[0] = container 3 (top)
+    // Pre-create 4 empty line containers
+    // With column-reverse, we need to prepend so they appear in correct order
+    // lines[0] = container 3 (top, appears at top visually)
     // lines[1] = container 2
     // lines[2] = container 1
-    // lines[3] = container 0 (bottom, where typing happens)
+    // lines[3] = container 0 (bottom, appears at bottom visually, where typing happens)
     for (let i = 0; i < 4; i++) {
         const line = document.createElement('div');
         line.className = 'typewriter-line';
         line.style.opacity = '0';
         line.textContent = '';
-        container.appendChild(line);
+        // Prepend so with column-reverse they appear in order 0,1,2,3 from bottom to top
+        container.insertBefore(line, container.firstChild);
         lines.push(line);
     }
     
