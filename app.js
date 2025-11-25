@@ -683,16 +683,40 @@ function transitionToVideo() {
     // After 15 seconds of video playing, show the content overlay
     if (video) {
         let overlayShown = false;
+        let overlayTimeout = null;
         video.addEventListener('timeupdate', function() {
             if (!overlayShown && video.currentTime >= 15) {
                 overlayShown = true;
                 const videoContentOverlay = document.getElementById('video-content-overlay');
+                const videoWaitlistButton = document.getElementById('video-waitlist-button');
+                
                 if (videoContentOverlay) {
                     videoContentOverlay.style.display = 'flex';
                     // Use requestAnimationFrame to ensure display change is rendered before opacity transition
                     requestAnimationFrame(function() {
                         videoContentOverlay.classList.add('show');
                     });
+                    
+                    // Set timeout to fade out overlay after 5 seconds if button not clicked
+                    overlayTimeout = setTimeout(function() {
+                        if (videoContentOverlay.classList.contains('show')) {
+                            videoContentOverlay.classList.remove('show');
+                            // Remove overlay from display after fade out completes
+                            setTimeout(function() {
+                                videoContentOverlay.style.display = 'none';
+                            }, 800); // Match the 0.8s transition duration
+                        }
+                    }, 5000);
+                    
+                    // If button is clicked, cancel the auto-fade timeout
+                    if (videoWaitlistButton) {
+                        videoWaitlistButton.addEventListener('click', function() {
+                            if (overlayTimeout) {
+                                clearTimeout(overlayTimeout);
+                                overlayTimeout = null;
+                            }
+                        }, { once: true });
+                    }
                 }
             }
         });
