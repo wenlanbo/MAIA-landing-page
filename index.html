@@ -35,6 +35,58 @@
         </div>
     </div>
     
+    <!-- Waitlist form overlay -->
+    <div id="waitlist-form-overlay" class="waitlist-form-overlay" style="display: none;">
+        <div class="waitlist-form-container">
+            <h2 class="waitlist-form-title">Experience the power of Maia</h2>
+            <p class="waitlist-form-subtitle">Your Surgical AI Co-Pilot</p>
+            
+            <form id="waitlist-submission-form" class="waitlist-submission-form">
+                <div class="form-input-group">
+                    <label for="waitlist-name-input" class="form-input-label">Name</label>
+                    <input 
+                        type="text" 
+                        id="waitlist-name-input" 
+                        name="name"
+                        class="form-input"
+                        required
+                        autocomplete="name"
+                    >
+                </div>
+                
+                <div class="form-input-group">
+                    <label for="waitlist-email-input" class="form-input-label">Email</label>
+                    <input 
+                        type="email" 
+                        id="waitlist-email-input" 
+                        name="email"
+                        class="form-input"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+                
+                <div class="form-input-group">
+                    <label for="waitlist-org-input" class="form-input-label">Organization</label>
+                    <input 
+                        type="text" 
+                        id="waitlist-org-input" 
+                        name="organization"
+                        class="form-input"
+                        autocomplete="organization"
+                    >
+                </div>
+                
+                <p class="experimental-title">Experimental Use Only</p>
+                <p class="experimental-text">Maia is not intended for clinical decision making or diagnostic use. Research use only.</p>
+                
+                <button type="submit" id="waitlist-submit-btn" class="waitlist-submit-btn">
+                    Join the Waitlist
+                </button>
+            </form>
+        </div>
+    </div>
+    
     <!-- Main container with two sections -->
     <div class="page-container">
         <!-- Left section -->

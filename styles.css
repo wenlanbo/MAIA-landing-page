@@ -473,3 +473,148 @@ body.video-mode .page-container {
     background-color: rgba(40, 40, 40, 0.8);
     transform: translateY(-2px);
 }
+
+/* Waitlist form overlay */
+.waitlist-form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(12, 12, 12, 0.65); /* #0C0C0C with 65% opacity */
+    z-index: 250; /* Above everything including logo */
+    display: none;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    align-items: center;
+    justify-content: center;
+}
+
+.waitlist-form-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.waitlist-form-container {
+    width: 452px;
+    height: 611px;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.waitlist-form-title {
+    font-family: 'TTCommonsPro-DemiBold', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    margin: 0 0 20px 0;
+}
+
+.waitlist-form-subtitle {
+    font-family: 'TTCommonsPro-DemiBold', sans-serif;
+    font-size: 25px;
+    font-weight: 600;
+    margin: 0 0 30px 0;
+    background: linear-gradient(to right, 
+        #38867A 0%,
+        #63ECD6 45%,
+        #24B49D 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+}
+
+.waitlist-submission-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-input-label {
+    font-family: 'TTCommonsPro-Regular', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #fff;
+    text-align: left;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    font-family: 'TTCommonsPro-Regular', sans-serif;
+    font-size: 16px;
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    border-color: #63ECD6;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.experimental-title {
+    font-family: 'TTCommonsPro-Regular', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #fff;
+    margin: 10px 0 8px 0;
+    text-align: left;
+}
+
+.experimental-text {
+    font-family: 'TTCommonsPro-Regular', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5); /* #FFFFFF with 50% opacity */
+    margin: 0 0 20px 0;
+    text-align: left;
+    line-height: 1.4;
+}
+
+.waitlist-submit-btn {
+    width: 100%;
+    padding: 15px 30px;
+    font-family: 'TTCommonsPro-DemiBold', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    background-color: rgba(40, 40, 40, 0.66); /* #282828 with 66% opacity */
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: auto;
+}
+
+.waitlist-submit-btn:hover:not(:disabled) {
+    background-color: rgba(40, 40, 40, 0.8);
+    transform: translateY(-2px);
+}
+
+.waitlist-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
