@@ -725,4 +725,140 @@ function transitionToVideo() {
     }
 }
 
+// Show waitlist form overlay
+function showWaitlistForm() {
+    // Hide video content overlay if it's showing
+    const videoContentOverlay = document.getElementById('video-content-overlay');
+    if (videoContentOverlay && videoContentOverlay.classList.contains('show')) {
+        videoContentOverlay.classList.remove('show');
+        setTimeout(function() {
+            videoContentOverlay.style.display = 'none';
+            videoContentOverlay.style.opacity = '0';
+        }, 800);
+    }
+    
+    // Show waitlist form overlay
+    const waitlistFormOverlay = document.getElementById('waitlist-form-overlay');
+    if (waitlistFormOverlay) {
+        waitlistFormOverlay.style.display = 'flex';
+        requestAnimationFrame(function() {
+            waitlistFormOverlay.classList.add('show');
+        });
+    }
+}
+
+// Hide waitlist form overlay with fade out
+function hideWaitlistForm() {
+    const waitlistFormOverlay = document.getElementById('waitlist-form-overlay');
+    if (waitlistFormOverlay) {
+        waitlistFormOverlay.classList.remove('show');
+        setTimeout(function() {
+            waitlistFormOverlay.style.display = 'none';
+            waitlistFormOverlay.style.opacity = '0';
+        }, 800); // Match the 0.8s transition duration
+    }
+}
+
+// Add event listeners to all "Join Waitlist" buttons
+document.addEventListener('DOMContentLoaded', function() {
+    // Top right button
+    const waitlistButton = document.getElementById('waitlist-button');
+    if (waitlistButton) {
+        waitlistButton.addEventListener('click', function() {
+            showWaitlistForm();
+        });
+    }
+    
+    // Video content overlay button
+    const videoWaitlistButton = document.getElementById('video-waitlist-button');
+    if (videoWaitlistButton) {
+        videoWaitlistButton.addEventListener('click', function() {
+            showWaitlistForm();
+        });
+    }
+    
+    // Waitlist submission form
+    const waitlistSubmissionForm = document.getElementById('waitlist-submission-form');
+    if (waitlistSubmissionForm) {
+        waitlistSubmissionForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const nameInput = document.getElementById('waitlist-name-input');
+            const emailInput = document.getElementById('waitlist-email-input');
+            const orgInput = document.getElementById('waitlist-org-input');
+            const submitBtn = document.getElementById('waitlist-submit-btn');
+            
+            const name = nameInput ? nameInput.value.trim() : '';
+            const email = emailInput ? emailInput.value.trim() : '';
+            const org = orgInput ? orgInput.value.trim() : '';
+            
+            // Validate required fields
+            if (!name || !email) {
+                alert('Please fill in all required fields (Name and Email)');
+                return;
+            }
+            
+            // Validate email format
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            // Disable submit button
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+            }
+            
+            try {
+                // Call Supabase RPC function
+                const { data, error } = await supabase.rpc('waitlist_signup', {
+                    p_name: name,
+                    p_org: org,
+                    p_email: email
+                });
+                
+                if (error) {
+                    console.error('Error submitting form:', error);
+                    alert('Something went wrong. Please try again later.');
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Join the Waitlist';
+                    }
+                    return;
+                }
+                
+                // Handle response
+                let responseData = data;
+                if (Array.isArray(data) && data.length > 0) {
+                    responseData = data[0];
+                }
+                
+                if (responseData && responseData.added && responseData.ok) {
+                    // Success - fade out the form
+                    hideWaitlistForm();
+                    alert('Thank you! You have been added to the waitlist.');
+                } else if (responseData && !responseData.added && responseData.ok) {
+                    // Already registered
+                    hideWaitlistForm();
+                    alert('This email is already registered in our waitlist.');
+                } else {
+                    alert('Something went wrong. Please try again later.');
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Join the Waitlist';
+                    }
+                }
+            } catch (error) {
+                console.error('Exception submitting form:', error);
+                alert('Something went wrong. Please try again later.');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Join the Waitlist';
+                }
+            }
+        });
+    }
+});
+
 
