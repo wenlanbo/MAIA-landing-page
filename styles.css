@@ -52,7 +52,7 @@ body.loaded .logo {
     left: 32px;
     width: 154px;
     height: auto;
-    z-index: 100;
+    z-index: 200; /* Above everything including video content overlay */
 }
 
 /* Main page container */
@@ -367,4 +367,82 @@ body.video-mode .video-overlay {
     width: 100%;
     height: 100%;
     pointer-events: none;
+}
+
+/* Video content overlay - appears after 15 seconds */
+.video-content-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(12, 12, 12, 0.65); /* #0C0C0C with 65% opacity */
+    z-index: 60; /* Above video (51) but below logo (200) */
+    display: none;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.video-content-overlay.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+}
+
+.video-content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.maia-logo {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 40px;
+}
+
+.video-subtitle {
+    font-family: 'TTCommonsPro-Regular', sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    margin: 0 0 40px 0;
+    background: linear-gradient(to right, 
+        #38867A 0%,
+        #63ECD6 45%,
+        #24B49D 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.video-hero-text {
+    font-family: 'TTCommonsPro-Regular', sans-serif;
+    font-size: 48px;
+    font-weight: 400;
+    color: #fff;
+    margin: 0 0 40px 0;
+    text-align: center;
+}
+
+.video-waitlist-button {
+    width: 180px;
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    background-color: rgba(40, 40, 40, 0.66); /* #282828 with 66% opacity */
+    color: #fff;
+    font-family: 'TTCommonsPro-DemiBold', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.video-waitlist-button:hover {
+    background-color: rgba(40, 40, 40, 0.8);
+    transform: translateY(-2px);
 }
