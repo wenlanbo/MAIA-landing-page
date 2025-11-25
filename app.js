@@ -463,3 +463,92 @@ emailInput.addEventListener('input', () => {
 console.log('[DEBUG] Page loaded, script initialized');
 console.log('[DEBUG] Supabase library available:', typeof window.supabase !== 'undefined');
 
+// Typewriter Animation
+const typewriterTexts = [
+    "Show me the exact location of the lesion",
+    "Where is this structure relative to landmarks?",
+    "What's the recommended trajectory?",
+    "Segment the tumor"
+];
+
+const opacityValues = [1.0, 0.5, 0.3, 0.2]; // 100%, 50%, 30%, 20% from bottom to top
+
+function initTypewriter() {
+    const container = document.getElementById('typewriter-container');
+    if (!container) return;
+    
+    let currentLineIndex = 0;
+    let currentCharIndex = 0;
+    const lines = [];
+    
+    // Create all line elements (they'll be added in reverse order due to flex-direction: column-reverse)
+    typewriterTexts.forEach((text, index) => {
+        const line = document.createElement('div');
+        line.className = 'typewriter-line';
+        line.style.opacity = '0';
+        container.appendChild(line);
+        lines.push(line);
+    });
+    
+    function typeNextChar() {
+        if (currentLineIndex >= typewriterTexts.length) {
+            // All lines completed, restart animation
+            setTimeout(() => {
+                // Reset all lines
+                lines.forEach((line) => {
+                    line.textContent = '';
+                    line.style.opacity = '0';
+                });
+                currentLineIndex = 0;
+                currentCharIndex = 0;
+                typeNextChar();
+            }, 2000); // Wait 2 seconds before restarting
+            return;
+        }
+        
+        // Get the line (in reverse order, so index 0 is at bottom)
+        const lineIndex = typewriterTexts.length - 1 - currentLineIndex;
+        const currentLine = lines[lineIndex];
+        const currentText = typewriterTexts[currentLineIndex];
+        
+        if (currentCharIndex < currentText.length) {
+            // Type next character
+            currentLine.textContent = currentText.substring(0, currentCharIndex + 1);
+            // Bottom line (first line) gets 100% opacity
+            currentLine.style.opacity = opacityValues[0].toString();
+            currentCharIndex++;
+            
+            // Continue typing this line
+            setTimeout(typeNextChar, 50); // 50ms delay between characters
+        } else {
+            // Line is complete, update opacities for all visible lines
+            // Bottom line (most recent) = 100%, second = 50%, third = 30%, fourth = 20%
+            for (let i = 0; i <= currentLineIndex; i++) {
+                const lineIdx = typewriterTexts.length - 1 - i;
+                const line = lines[lineIdx];
+                const positionFromBottom = currentLineIndex - i;
+                if (positionFromBottom < opacityValues.length) {
+                    line.style.opacity = opacityValues[positionFromBottom].toString();
+                }
+            }
+            
+            // Move to next line
+            currentLineIndex++;
+            currentCharIndex = 0;
+            
+            // Start typing next line immediately
+            setTimeout(typeNextChar, 100); // Small delay before starting next line
+        }
+    }
+    
+    // Start the animation
+    typeNextChar();
+}
+
+// Initialize typewriter when page loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTypewriter);
+} else {
+    initTypewriter();
+}
+
