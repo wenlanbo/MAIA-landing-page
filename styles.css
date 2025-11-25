@@ -98,8 +98,10 @@ body {
     white-space: nowrap;
     transition: opacity 0s; /* Immediate opacity change */
     text-align: left; /* Left align text within line */
-    width: 60%; /* 40% narrower (60% of original width) */
-    max-width: 60%;
+    width: 100%; /* Fill the typewriter container width */
+    height: 35px; /* Set height to 35px */
+    display: flex;
+    align-items: center; /* Vertically center text in the 35px height */
 }
 
 .typewriter-line:last-child {
