@@ -23,11 +23,11 @@ body {
     overflow-x: hidden;
 }
 
-/* Logo in top right */
+/* Logo in top left */
 .logo {
     position: absolute;
     top: 32px;
-    right: 32px;
+    left: 32px;
     width: 154px;
     height: auto;
     z-index: 100;
@@ -54,7 +54,7 @@ body {
     font-family: 'TTCommonsPro-DemiBold', sans-serif;
     font-size: 100px;
     font-weight: 600;
-    color: #000;
+    color: #fff;
     text-align: center;
     width: 100%;
     margin: 0;
