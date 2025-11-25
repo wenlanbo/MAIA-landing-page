@@ -612,3 +612,43 @@ if (document.readyState === 'loading') {
     waitForBackgroundImage();
 }
 
+// Transition to video mode: black background, play video, show logo and button
+function transitionToVideo() {
+    const body = document.body;
+    const pageContainer = document.querySelector('.page-container');
+    const video = document.getElementById('placeholder-video');
+    const logo = document.querySelector('.logo');
+    const waitlistButton = document.getElementById('waitlist-button');
+    
+    // Hide the page container (landing page content)
+    if (pageContainer) {
+        pageContainer.style.display = 'none';
+    }
+    
+    // Make background black
+    body.style.backgroundColor = '#000';
+    body.style.backgroundImage = 'none';
+    
+    // Show and play video
+    if (video) {
+        video.style.display = 'block';
+        video.play().catch(function(error) {
+            console.error('Error playing video:', error);
+        });
+    }
+    
+    // Show logo (already positioned)
+    if (logo) {
+        logo.style.display = 'block';
+    }
+    
+    // Show waitlist button
+    if (waitlistButton) {
+        waitlistButton.style.display = 'block';
+    }
+    
+    // Add video mode class to body for CSS styling
+    body.classList.add('video-mode');
+}
+
+

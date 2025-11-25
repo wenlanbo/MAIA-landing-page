@@ -10,8 +10,19 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Logo in top right -->
+    <!-- Video element (hidden initially, loaded during initial loading) -->
+    <video id="placeholder-video" class="placeholder-video" preload="auto" muted>
+        <source src="Assets/videos/placeholder.mp4" type="video/mp4">
+    </video>
+    
+    <!-- Logo in top left -->
     <img src="Assets/img/Medivis Logo.png" alt="Medivis Logo" class="logo">
+    
+    <!-- Waitlist button (hidden initially) -->
+    <button id="waitlist-button" class="waitlist-button" style="display: none;">
+        <img src="Assets/img/CyanWaitlistButton.png" alt="Button Background" class="waitlist-button-bg">
+        <span class="waitlist-button-text">Join the Waitlist</span>
+    </button>
     
     <!-- Main container with two sections -->
     <div class="page-container">
