@@ -122,9 +122,10 @@ body {
     left: 50%;
     bottom: calc(50% - 50px - 50px); /* Position above the typewriter container (50px above it) */
     transform: translateX(-50%); /* Center horizontally */
-    width: 100%; /* Same width as typewriter container */
+    width: 100%; /* Match typewriter line width (which is 100% of container, but 40% narrower) */
+    max-width: 60%; /* Typewriter lines are 40% narrower, so 60% of container */
     height: 3px;
-    background-color: #63ecd6;
+    background-color: rgba(99, 236, 214, 0.2); /* Base line with low opacity */
     overflow: hidden;
 }
 
@@ -133,25 +134,21 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 0%;
     height: 100%;
     background: linear-gradient(to right, 
         rgba(99, 236, 214, 0) 0%,
-        rgba(99, 236, 214, 0.25) 25%,
         rgba(99, 236, 214, 0.5) 50%,
-        rgba(99, 236, 214, 0.75) 75%,
         rgba(99, 236, 214, 1) 100%);
-    background-size: 200% 100%;
-    background-position: -100% 0;
-    animation: loadingLineAnimation 2s ease-in-out infinite;
+    animation: loadingLineProgress 3s ease-in-out forwards; /* One-time animation */
 }
 
-@keyframes loadingLineAnimation {
+@keyframes loadingLineProgress {
     0% {
-        background-position: -100% 0; /* Start with gradient off to the left */
+        width: 0%; /* Start empty */
     }
     100% {
-        background-position: 100% 0; /* End with gradient fully visible */
+        width: 100%; /* Fill completely */
     }
 }
 
