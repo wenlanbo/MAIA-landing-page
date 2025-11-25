@@ -317,17 +317,15 @@ body.loaded .logo {
 .placeholder-video {
     display: none; /* Hidden initially */
     position: fixed;
-    top: 50%;
+    top: 80px; /* 80px padding from top */
     left: 50%;
-    width: calc(100% - 0px); /* Full width minus any horizontal padding */
+    width: 100%;
     height: calc(100vh - 160px); /* Full height minus 80px top and 80px bottom padding */
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     z-index: 51; /* Above the black overlay */
     object-fit: contain; /* Maintain aspect ratio while fitting the screen */
     opacity: 0;
     transition: opacity 2s ease-in-out;
-    padding: 80px 0; /* 80px top and bottom padding */
-    box-sizing: border-box;
 }
 
 body.video-mode .placeholder-video {
