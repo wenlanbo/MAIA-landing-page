@@ -300,7 +300,7 @@ body.loaded .logo {
     height: auto;
     transform: translate(-50%, -50%);
     z-index: 1;
-    object-fit: cover; /* Cover the entire screen while maintaining aspect ratio */
+    object-fit: contain; /* Maintain aspect ratio while fitting the screen */
 }
 
 body.video-mode .placeholder-video {
