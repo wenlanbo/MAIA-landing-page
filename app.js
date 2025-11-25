@@ -710,13 +710,14 @@ function transitionToVideo() {
                         }
                     }, 5000);
                     
-                    // If button is clicked, cancel the auto-fade timeout
+                    // If button is clicked, cancel the auto-fade timeout and show form
                     if (videoWaitlistButton) {
                         videoWaitlistButton.addEventListener('click', function() {
                             if (overlayTimeout) {
                                 clearTimeout(overlayTimeout);
                                 overlayTimeout = null;
                             }
+                            showWaitlistForm();
                         }, { once: true });
                     }
                 }
