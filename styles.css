@@ -116,6 +116,31 @@ body {
     height: 0;
 }
 
+/* Loading line */
+.loading-line {
+    position: absolute;
+    left: 50%;
+    bottom: calc(50% - 50px - 50px); /* Position above the typewriter container (50px above it) */
+    transform: translateX(-50%); /* Center horizontally */
+    width: 100%; /* Same width as typewriter container */
+    height: 3px;
+    background: linear-gradient(to right, 
+        rgba(99, 236, 214, 0) 0%,
+        rgba(99, 236, 214, 1) 100%);
+    background-size: 200% 100%;
+    background-position: -100% 0;
+    animation: loadingLineAnimation 2s ease-in-out infinite;
+}
+
+@keyframes loadingLineAnimation {
+    0% {
+        background-position: -100% 0; /* Start with gradient off to the left */
+    }
+    100% {
+        background-position: 100% 0; /* End with gradient fully visible */
+    }
+}
+
 /* Waitlist form styles (hidden but kept for future use) */
 .waitlist-form {
     margin-top: 30px;
