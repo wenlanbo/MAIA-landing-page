@@ -85,19 +85,17 @@ body {
     bottom: calc(50% - 50px); /* Position bottom to align with hero text bottom (hero is 100px, so half is 50px) */
     transform: translateX(-50%); /* Center horizontally */
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse; /* Reverse order so new lines appear at bottom */
     align-items: center; /* Center lines horizontally */
-    justify-content: flex-end; /* Align lines to bottom */
     font-family: 'TTCommonsPro-Regular', sans-serif;
     font-size: 32px;
     color: #fff;
     line-height: 1.2;
     width: 100%; /* Fill available width */
-    min-height: 0; /* Prevent flex from creating extra space */
 }
 
 .typewriter-line {
-    margin-bottom: 5px; /* Space between lines */
+    margin-top: 5px; /* Space between lines (using margin-top since we're reversed) */
     white-space: nowrap;
     transition: opacity 0s; /* Immediate opacity change */
     text-align: left; /* Left align text within line */
@@ -108,13 +106,13 @@ body {
     flex-shrink: 0; /* Prevent lines from shrinking */
 }
 
-.typewriter-line:last-child {
-    margin-bottom: 0; /* Last line (bottom) has no bottom margin */
+.typewriter-line:first-child {
+    margin-top: 0; /* First line (bottom in reversed order) has no top margin */
 }
 
 .typewriter-line.hidden {
-    display: none; /* Hide empty lines so they don't affect spacing */
-    margin-bottom: 0;
+    display: none !important; /* Hide empty lines so they don't affect spacing */
+    margin-top: 0;
     height: 0;
 }
 
