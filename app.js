@@ -513,22 +513,18 @@ function initTypewriter() {
             setTimeout(typeNextChar, 50); // 50ms delay between characters
         } else {
             // Line is complete in container 0 (lines[3], bottom visually)
-            // Shift all texts up visually: 0→1, 1→2, 2→3, 3 restarts
+            // Shift all texts up visually from bottom to top
             // With column-reverse: lines[3]=bottom, lines[2]=second, lines[1]=third, lines[0]=top
-            // So to move up: lines[3]→lines[2], lines[2]→lines[1], lines[1]→lines[0], lines[0] clears
-            const textFrom0 = container0.textContent; // Save text from container 0 (lines[3], bottom)
+            // To move up: bottom→second, second→third, third→top, top clears
+            const textFromBottom = container0.textContent; // Save text from bottom (lines[3])
+            const textFromSecond = lines[2].textContent; // Save text from second (lines[2])
+            const textFromThird = lines[1].textContent; // Save text from third (lines[1])
             
-            // Move texts up visually (from bottom to top):
-            // Container 2 (lines[1]) gets text from container 1 (lines[2])
-            // Container 1 (lines[2]) gets text from container 0 (lines[3])
-            // Container 3 (lines[0], top) gets text from container 2 (lines[1])
-            // Container 0 (lines[3], bottom) will be cleared for new text
-            lines[1].textContent = lines[2].textContent; // 1→2 (second moves to third)
-            lines[2].textContent = textFrom0; // 0→1 (bottom moves to second)
-            lines[0].textContent = lines[1].textContent; // 2→3 (third moves to top)
-            
-            // Clear container 0 (bottom) for new text
-            container0.textContent = '';
+            // Shift up in order: bottom→second, second→third, third→top, top clears
+            lines[2].textContent = textFromBottom; // bottom → second
+            lines[1].textContent = textFromSecond; // second → third
+            lines[0].textContent = textFromThird; // third → top
+            lines[3].textContent = ''; // clear bottom for new text
             
             // Update opacities immediately
             updateOpacities();
