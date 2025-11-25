@@ -541,18 +541,36 @@ function initTypewriter() {
         // Update opacities for all containers
         // Container 0 (bottom, lines[3]) = 100%, Container 1 (lines[2]) = 50%, Container 2 (lines[1]) = 30%, Container 3 (lines[0]) = 20%
         // Position from bottom: 0 = bottom (container 0), 1 = container 1, 2 = container 2, 3 = container 3 (top)
+        
+        // Count visible lines (lines with text) from bottom to top
+        const visibleLines = [];
+        for (let i = 3; i >= 0; i--) {
+            if (lines[i].textContent.trim() !== '') {
+                visibleLines.push(i);
+            }
+        }
+        
         for (let i = 0; i < 4; i++) {
             const line = lines[i];
-            const positionFromBottom = 3 - i; // 3→0, 2→1, 1→2, 0→3
-            if (positionFromBottom < opacityValues.length) {
-                // Only show opacity if container has text
-                if (line.textContent.trim() !== '') {
+            const hasText = line.textContent.trim() !== '';
+            
+            if (hasText) {
+                // Show the line
+                line.classList.remove('hidden');
+                line.style.display = 'flex';
+                
+                // Find position from bottom (0 = bottom, 1 = second, etc.)
+                const positionFromBottom = visibleLines.indexOf(i);
+                
+                if (positionFromBottom < opacityValues.length) {
                     line.style.opacity = opacityValues[positionFromBottom].toString();
                 } else {
-                    line.style.opacity = '0';
+                    line.style.opacity = opacityValues[opacityValues.length - 1].toString();
                 }
             } else {
-                line.style.opacity = opacityValues[opacityValues.length - 1].toString();
+                // Hide empty lines
+                line.classList.add('hidden');
+                line.style.opacity = '0';
             }
         }
     }

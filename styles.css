@@ -93,6 +93,7 @@ body {
     color: #fff;
     line-height: 1.2;
     width: 100%; /* Fill available width */
+    min-height: 0; /* Prevent flex from creating extra space */
 }
 
 .typewriter-line {
@@ -104,10 +105,17 @@ body {
     height: 35px; /* Set height to 35px */
     display: flex;
     align-items: center; /* Vertically center text in the 35px height */
+    flex-shrink: 0; /* Prevent lines from shrinking */
 }
 
 .typewriter-line:last-child {
     margin-bottom: 0; /* Last line (bottom) has no bottom margin */
+}
+
+.typewriter-line.hidden {
+    display: none; /* Hide empty lines so they don't affect spacing */
+    margin-bottom: 0;
+    height: 0;
 }
 
 /* Waitlist form styles (hidden but kept for future use) */
