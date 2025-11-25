@@ -648,14 +648,23 @@ function transitionToVideo() {
     const logo = document.querySelector('.logo');
     const waitlistButton = document.getElementById('waitlist-button');
     
+    // Add video mode class to body for CSS styling (triggers fade-in)
+    body.classList.add('video-mode');
+    
     // Show black background overlay (keeps original content visible underneath)
     if (videoOverlay) {
         videoOverlay.style.display = 'block';
+        // Trigger fade-in by forcing reflow, then setting opacity
+        videoOverlay.offsetHeight; // Force reflow
+        videoOverlay.style.opacity = '1';
     }
     
     // Show and play video on top of original content
     if (video) {
         video.style.display = 'block';
+        // Trigger fade-in by forcing reflow, then setting opacity
+        video.offsetHeight; // Force reflow
+        video.style.opacity = '1';
         video.play().catch(function(error) {
             console.error('Error playing video:', error);
         });
@@ -671,9 +680,6 @@ function transitionToVideo() {
     if (waitlistButton) {
         waitlistButton.style.display = 'block';
     }
-    
-    // Add video mode class to body for CSS styling
-    body.classList.add('video-mode');
 }
 
 
