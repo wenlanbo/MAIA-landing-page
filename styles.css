@@ -122,8 +122,7 @@ body {
     left: 50%;
     bottom: calc(50% - 50px - 50px); /* Position above the typewriter container (50px above it) */
     transform: translateX(-50%); /* Center horizontally */
-    width: 100%; /* Match typewriter line width (which is 100% of container, but 40% narrower) */
-    max-width: 60%; /* Typewriter lines are 40% narrower, so 60% of container */
+    width: 100%; /* Match typewriter line width (typewriter-line is 100% of container) */
     height: 3px;
     background-color: rgba(99, 236, 214, 0.2); /* Base line with low opacity */
     overflow: hidden;
