@@ -512,17 +512,23 @@ function initTypewriter() {
             // Continue typing this line
             setTimeout(typeNextChar, 50); // 50ms delay between characters
         } else {
-            // Line is complete in container 0
-            // Shift all texts up: 0→1, 1→2, 2→3, 3→0 (restart)
-            const textFrom0 = container0.textContent; // Save text from container 0
+            // Line is complete in container 0 (lines[3], bottom visually)
+            // Shift all texts up visually: 0→1, 1→2, 2→3, 3 restarts
+            // With column-reverse: lines[3]=bottom, lines[2]=second, lines[1]=third, lines[0]=top
+            // So to move up: lines[3]→lines[2], lines[2]→lines[1], lines[1]→lines[0], lines[0] clears
+            const textFrom0 = container0.textContent; // Save text from container 0 (lines[3], bottom)
             
-            // Move texts up: 2→3, 1→2, 0→1
-            lines[3].textContent = lines[2].textContent; // 2→3
-            lines[2].textContent = lines[1].textContent; // 1→2
-            lines[1].textContent = lines[0].textContent; // 0→1
+            // Move texts up visually (from bottom to top):
+            // Container 2 (lines[1]) gets text from container 1 (lines[2])
+            // Container 1 (lines[2]) gets text from container 0 (lines[3])
+            // Container 3 (lines[0], top) gets text from container 2 (lines[1])
+            // Container 0 (lines[3], bottom) will be cleared for new text
+            lines[1].textContent = lines[2].textContent; // 1→2 (second moves to third)
+            lines[2].textContent = textFrom0; // 0→1 (bottom moves to second)
+            lines[0].textContent = lines[1].textContent; // 2→3 (third moves to top)
             
-            // Container 3 (top) gets the text from container 0, then container 0 will get new text
-            lines[0].textContent = textFrom0;
+            // Clear container 0 (bottom) for new text
+            container0.textContent = '';
             
             // Update opacities immediately
             updateOpacities();
@@ -530,9 +536,6 @@ function initTypewriter() {
             // Move to next text in cycle
             currentTextIndex = (currentTextIndex + 1) % typewriterTexts.length;
             currentCharIndex = 0;
-            
-            // Clear container 0 and start typing new text
-            container0.textContent = '';
             
             // Start typing next line immediately
             setTimeout(typeNextChar, 100); // Small delay before starting next line
