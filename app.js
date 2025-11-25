@@ -680,6 +680,24 @@ function transitionToVideo() {
     if (waitlistButton) {
         waitlistButton.style.display = 'block';
     }
+    
+    // After 15 seconds of video playing, show the content overlay
+    if (video) {
+        let overlayShown = false;
+        video.addEventListener('timeupdate', function() {
+            if (!overlayShown && video.currentTime >= 15) {
+                overlayShown = true;
+                const videoContentOverlay = document.getElementById('video-content-overlay');
+                if (videoContentOverlay) {
+                    videoContentOverlay.style.display = 'flex';
+                    // Use requestAnimationFrame to ensure display change is rendered before opacity transition
+                    requestAnimationFrame(function() {
+                        videoContentOverlay.classList.add('show');
+                    });
+                }
+            }
+        });
+    }
 }
 
 
