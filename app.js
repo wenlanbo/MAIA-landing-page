@@ -481,24 +481,20 @@ function initTypewriter() {
     let currentCharIndex = 0;
     const lines = []; // Array of DOM elements for visible lines
     
+    // Pre-create 4 empty line containers
+    for (let i = 0; i < 4; i++) {
+        const line = document.createElement('div');
+        line.className = 'typewriter-line';
+        line.style.opacity = '0';
+        line.textContent = '';
+        container.appendChild(line);
+        lines.push(line);
+    }
+    
     function typeNextChar() {
-        // If we have 4 lines visible, remove the top (oldest) line
-        if (lines.length >= 4) {
-            const topLine = lines.shift(); // Remove first line
-            topLine.remove(); // Remove from DOM
-        }
-        
-        // Create new line at the bottom if needed
-        let currentLine;
-        if (lines.length === 0 || currentCharIndex === 0) {
-            currentLine = document.createElement('div');
-            currentLine.className = 'typewriter-line';
-            currentLine.style.opacity = '0';
-            container.appendChild(currentLine);
-            lines.push(currentLine);
-        } else {
-            currentLine = lines[lines.length - 1]; // Get the last (bottom) line
-        }
+        // Get the current line (we'll cycle through the 4 containers)
+        // The bottom line is always the last one in the array
+        const currentLine = lines[lines.length - 1];
         
         const currentText = typewriterTexts[currentTextIndex];
         
@@ -514,6 +510,12 @@ function initTypewriter() {
         } else {
             // Line is complete, update opacities immediately
             updateOpacities();
+            
+            // Move all lines up: remove top line and add new empty line at bottom
+            const topLine = lines.shift(); // Remove first (top) line
+            topLine.textContent = ''; // Clear its content
+            topLine.style.opacity = '0';
+            lines.push(topLine); // Add it back at the bottom
             
             // Move to next text in cycle
             currentTextIndex = (currentTextIndex + 1) % typewriterTexts.length;
