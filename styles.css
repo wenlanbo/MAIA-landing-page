@@ -620,3 +620,39 @@ body.video-mode .page-container {
     opacity: 0.7;
     cursor: not-allowed;
 }
+
+/* Responsive layout: Stack sections vertically when space is very constrained */
+@media (max-width: 800px) {
+    .page-container {
+        flex-direction: column; /* Stack vertically */
+        gap: clamp(20px, 4vh, 60px); /* Vertical gap instead of horizontal */
+        padding: clamp(20px, 3vh, 40px) clamp(20px, 3vw, 60px); /* Vertical and horizontal padding */
+    }
+    
+    .left-section {
+        width: 100%;
+        order: 1; /* Left section appears first (on top) */
+    }
+    
+    .right-section {
+        width: 100%;
+        order: 2; /* Right section appears second (at bottom) */
+    }
+    
+    /* Adjust typewriter container positioning for vertical layout */
+    .typewriter-container {
+        position: relative;
+        left: auto;
+        bottom: auto;
+        transform: none;
+        margin-top: 20px;
+    }
+    
+    /* Adjust loading line for vertical layout */
+    .loading-line {
+        position: relative;
+        left: auto;
+        bottom: auto;
+        margin-top: 20px;
+    }
+}
