@@ -671,12 +671,16 @@ body.video-mode .page-container {
     
     /* Adjust loading line for vertical layout - position directly under typewriter container */
     .loading-line {
-        position: relative;
-        left: 0;
-        bottom: auto;
-        top: auto;
+        position: relative !important;
+        left: 0 !important;
+        bottom: auto !important;
+        top: auto !important;
         margin-top: 0; /* No top margin, appears directly after typewriter container */
         margin-bottom: 0;
         width: 100%;
+        padding-left: clamp(10px, 2vw, 20px); /* Match typewriter container left padding */
+        padding-right: clamp(10px, 2vw, 20px); /* Match typewriter container right padding */
+        box-sizing: border-box;
+        transform: none !important; /* Remove any transforms */
     }
 }
