@@ -105,12 +105,12 @@ body.loaded .logo {
 /* Typewriter animation container */
 .typewriter-container {
     position: absolute;
-    left: 50%;
+    left: 0; /* Align to left of right section */
     bottom: calc(50% - 50px); /* Position bottom to align with hero text bottom (hero is 100px, so half is 50px) */
-    transform: translateX(-50%); /* Center horizontally */
+    transform: none; /* Remove centering transform */
     display: flex;
     flex-direction: column-reverse; /* Reverse order so new lines appear at bottom */
-    align-items: center; /* Center lines horizontally */
+    align-items: flex-start; /* Align lines to the left */
     font-family: 'TTCommonsPro-Regular', sans-serif;
     font-size: clamp(18px, 2.5vw, 32px); /* Responsive font size: min 18px, preferred 2.5vw, max 32px */
     color: #fff;
