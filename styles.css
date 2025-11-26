@@ -62,20 +62,21 @@ body.loaded .logo {
     min-height: 100vh;
     justify-content: center;
     align-items: center;
-    gap: 0; /* Space between sections will be handled by max-width */
+    gap: clamp(40px, 5vw, 80px); /* Responsive gap: min 40px, preferred 5vw, max 80px - maintains consistent spacing */
+    padding: 0 clamp(20px, 3vw, 60px); /* Add responsive horizontal padding */
+    box-sizing: border-box;
 }
 
 /* Left section */
 .left-section {
-    max-width: 1106px;
-    width: 100%;
+    flex: 1 1 0; /* Equal flex basis for proportional scaling */
     min-width: 0; /* Allow shrinking */
+    max-width: none; /* Remove fixed max-width to allow proportional scaling */
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    flex: 1 1 auto; /* Allow growing and shrinking */
-    padding: 0 20px; /* Add some padding for smaller screens */
+    padding: 0 clamp(10px, 2vw, 20px); /* Responsive padding */
 }
 
 /* Hero title */
@@ -92,7 +93,7 @@ body.loaded .logo {
 
 /* Right section */
 .right-section {
-    flex: 1;
+    flex: 1 1 0; /* Equal flex basis for proportional scaling - matches left section */
     min-width: 0; /* Allow shrinking */
     display: flex;
     align-items: center; /* Center vertically like left section */
