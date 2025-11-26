@@ -731,12 +731,19 @@ function showWaitlistForm() {
     // Hide video content overlay if it's showing
     const videoContentOverlay = document.getElementById('video-content-overlay');
     if (videoContentOverlay && videoContentOverlay.classList.contains('show')) {
+        // Explicitly maintain display: flex to prevent layout shift during fade-out
+        videoContentOverlay.style.display = 'flex';
+        // Remove show class to trigger opacity fade-out transition
         videoContentOverlay.classList.remove('show');
+        // Wait for opacity transition to complete before hiding completely
         setTimeout(function() {
             videoContentOverlay.style.display = 'none';
             videoContentOverlay.style.opacity = '0';
-        }, 800);
+        }, 800); // Match the 0.8s transition duration
     }
+    
+    // Reset form to ensure clean state when opening
+    resetWaitlistForm();
     
     // Show waitlist form overlay
     const waitlistFormOverlay = document.getElementById('waitlist-form-overlay');
@@ -748,6 +755,31 @@ function showWaitlistForm() {
     }
 }
 
+// Reset waitlist form to initial state
+function resetWaitlistForm() {
+    const nameInput = document.getElementById('waitlist-name-input');
+    const emailInput = document.getElementById('waitlist-email-input');
+    const orgInput = document.getElementById('waitlist-org-input');
+    const submitBtn = document.getElementById('waitlist-submit-btn');
+    const waitlistSubmissionForm = document.getElementById('waitlist-submission-form');
+    
+    // Clear form fields
+    if (nameInput) nameInput.value = '';
+    if (emailInput) emailInput.value = '';
+    if (orgInput) orgInput.value = '';
+    
+    // Reset submit button state
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Join the Waitlist';
+    }
+    
+    // Reset form validation state (remove any error classes if they exist)
+    if (waitlistSubmissionForm) {
+        waitlistSubmissionForm.reset();
+    }
+}
+
 // Hide waitlist form overlay with fade out
 function hideWaitlistForm() {
     const waitlistFormOverlay = document.getElementById('waitlist-form-overlay');
@@ -756,6 +788,8 @@ function hideWaitlistForm() {
         setTimeout(function() {
             waitlistFormOverlay.style.display = 'none';
             waitlistFormOverlay.style.opacity = '0';
+            // Reset form state after hiding
+            resetWaitlistForm();
         }, 800); // Match the 0.8s transition duration
     }
 }

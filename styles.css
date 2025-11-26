@@ -401,6 +401,8 @@ body.video-mode .page-container {
     background-color: rgba(12, 12, 12, 0.65); /* #0C0C0C with 65% opacity */
     z-index: 150; /* Above video (51) and waitlist button (101) but below logo (200) */
     display: none;
+    align-items: center;
+    justify-content: center;
     opacity: 0;
     transition: opacity 0.8s ease-in-out;
     will-change: opacity; /* Prevent content jumping */
@@ -412,8 +414,6 @@ body.video-mode .page-container {
 
 .video-content-overlay.show {
     display: flex;
-    align-items: center;
-    justify-content: center;
     opacity: 1;
 }
 
