@@ -144,11 +144,11 @@ body.loaded .logo {
     height: 0;
 }
 
-/* Loading line */
+/* Loading line - positioned at bottom of typewriter container */
 .loading-line {
     position: absolute;
     left: 0; /* Align to left */
-    bottom: calc(50% - 50px - 50px); /* Position above the typewriter container (50px above it) */
+    bottom: calc(50% - 50px - 40px); /* Position below typewriter container (35px line height + 5px spacing) */
     width: 100%; /* Match typewriter line width (typewriter-line is 100% of container) */
     height: 3px;
     overflow: hidden;
@@ -623,9 +623,8 @@ body.video-mode .page-container {
 }
 
 /* Responsive layout: Stack sections vertically when space is constrained to prevent overlap */
-/* Breakpoint calculated: min-width left (200px) + gap (40px) + min-width right (250px) + padding (~120px) = ~610px minimum */
-/* Using 1200px to provide comfortable spacing before overlap occurs */
-@media (max-width: 1200px) {
+/* Breakpoint set to 1550px to switch to vertical layout before overlap */
+@media (max-width: 1550px) {
     .page-container {
         flex-direction: column; /* Stack vertically */
         gap: clamp(30px, 5vh, 80px); /* Vertical gap instead of horizontal */
@@ -637,7 +636,8 @@ body.video-mode .page-container {
         min-width: auto; /* Remove min-width constraint in vertical layout */
         max-width: 100%; /* Allow full width in vertical layout */
         order: 1; /* Left section appears first (on top) */
-        justify-content: flex-start; /* Left-align in vertical layout */
+        align-items: flex-end; /* Align hero text to bottom */
+        justify-content: flex-start; /* Left-align content */
         padding-bottom: clamp(20px, 3vh, 40px); /* Add bottom spacing */
     }
     
@@ -645,6 +645,8 @@ body.video-mode .page-container {
         width: 100%;
         min-width: auto; /* Remove min-width constraint in vertical layout */
         order: 2; /* Right section appears second (at bottom) */
+        align-items: flex-start; /* Align typewriter container to top */
+        justify-content: flex-start; /* Left-align content */
         padding-top: clamp(20px, 3vh, 40px); /* Add top spacing */
     }
     
@@ -655,21 +657,25 @@ body.video-mode .page-container {
         padding-left: clamp(10px, 2vw, 20px); /* Add left padding instead */
     }
     
-    /* Adjust typewriter container positioning for vertical layout */
+    /* Adjust typewriter container positioning for vertical layout - align to top */
     .typewriter-container {
         position: relative;
         left: auto;
         bottom: auto;
+        top: 0; /* Align to top */
         transform: none;
-        margin-top: 20px;
+        margin-top: 0; /* Remove margin since it's at top */
         padding: 0 clamp(10px, 2vw, 20px); /* Reset padding for vertical layout */
     }
     
-    /* Adjust loading line for vertical layout */
+    /* Adjust loading line for vertical layout - keep it at bottom of typewriter container */
     .loading-line {
         position: relative;
-        left: auto;
+        left: 0;
         bottom: auto;
-        margin-top: 20px;
+        top: auto;
+        margin-top: 10px; /* Position just below typewriter container */
+        margin-bottom: 0;
+        width: 100%;
     }
 }
