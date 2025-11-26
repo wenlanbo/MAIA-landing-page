@@ -894,6 +894,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Close overlay when clicking outside the form
+    const waitlistFormOverlay = document.getElementById('waitlist-form-overlay');
+    const waitlistFormContainer = document.querySelector('.waitlist-form-container');
+    if (waitlistFormOverlay && waitlistFormContainer) {
+        waitlistFormOverlay.addEventListener('click', function(e) {
+            // If the click target is the overlay itself (not the container or its children)
+            if (e.target === waitlistFormOverlay) {
+                hideWaitlistForm();
+            }
+        });
+    }
 });
 
 
