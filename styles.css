@@ -622,22 +622,37 @@ body.video-mode .page-container {
     cursor: not-allowed;
 }
 
-/* Responsive layout: Stack sections vertically when space is very constrained */
-@media (max-width: 800px) {
+/* Responsive layout: Stack sections vertically when space is constrained to prevent overlap */
+/* Breakpoint calculated: min-width left (200px) + gap (40px) + min-width right (250px) + padding (~120px) = ~610px minimum */
+/* Using 1200px to provide comfortable spacing before overlap occurs */
+@media (max-width: 1200px) {
     .page-container {
         flex-direction: column; /* Stack vertically */
-        gap: clamp(20px, 4vh, 60px); /* Vertical gap instead of horizontal */
+        gap: clamp(30px, 5vh, 80px); /* Vertical gap instead of horizontal */
         padding: clamp(20px, 3vh, 40px) clamp(20px, 3vw, 60px); /* Vertical and horizontal padding */
     }
     
     .left-section {
         width: 100%;
+        min-width: auto; /* Remove min-width constraint in vertical layout */
+        max-width: 100%; /* Allow full width in vertical layout */
         order: 1; /* Left section appears first (on top) */
+        justify-content: flex-start; /* Left-align in vertical layout */
+        padding-bottom: clamp(20px, 3vh, 40px); /* Add bottom spacing */
     }
     
     .right-section {
         width: 100%;
+        min-width: auto; /* Remove min-width constraint in vertical layout */
         order: 2; /* Right section appears second (at bottom) */
+        padding-top: clamp(20px, 3vh, 40px); /* Add top spacing */
+    }
+    
+    /* Adjust hero title for vertical layout */
+    .hero-title {
+        text-align: left; /* Left-align in vertical layout */
+        padding-right: 0; /* Remove right padding */
+        padding-left: clamp(10px, 2vw, 20px); /* Add left padding instead */
     }
     
     /* Adjust typewriter container positioning for vertical layout */
@@ -647,6 +662,7 @@ body.video-mode .page-container {
         bottom: auto;
         transform: none;
         margin-top: 20px;
+        padding: 0 clamp(10px, 2vw, 20px); /* Reset padding for vertical layout */
     }
     
     /* Adjust loading line for vertical layout */
