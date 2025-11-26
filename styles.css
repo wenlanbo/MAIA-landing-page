@@ -665,16 +665,17 @@ body.video-mode .page-container {
         top: 0; /* Align to top */
         transform: none;
         margin-top: 0; /* Remove margin since it's at top */
+        margin-bottom: 15px; /* Add space below for loading line */
         padding: 0 clamp(10px, 2vw, 20px); /* Reset padding for vertical layout */
     }
     
-    /* Adjust loading line for vertical layout - keep it at bottom of typewriter container */
+    /* Adjust loading line for vertical layout - position directly under typewriter container */
     .loading-line {
         position: relative;
         left: 0;
         bottom: auto;
         top: auto;
-        margin-top: 10px; /* Position just below typewriter container */
+        margin-top: 0; /* No top margin, appears directly after typewriter container */
         margin-bottom: 0;
         width: 100%;
     }
