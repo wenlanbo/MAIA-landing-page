@@ -70,11 +70,11 @@ body.loaded .logo {
 /* Left section */
 .left-section {
     flex: 1 1 0; /* Equal flex basis for proportional scaling */
-    min-width: 0; /* Allow shrinking */
+    min-width: 200px; /* Minimum width to prevent overlap */
     max-width: none; /* Remove fixed max-width to allow proportional scaling */
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end; /* Right-align content within left section */
     position: relative;
     padding: 0 clamp(10px, 2vw, 20px); /* Responsive padding */
 }
@@ -85,16 +85,17 @@ body.loaded .logo {
     font-size: clamp(40px, 8vw, 100px); /* Responsive font size: min 40px, preferred 8vw, max 100px */
     font-weight: 600;
     color: #fff;
-    text-align: left; /* Left aligned to keep text in one line */
+    text-align: right; /* Right-aligned within left section */
     width: 100%;
     margin: 0;
     white-space: nowrap; /* Prevent text from wrapping to keep in one line */
+    padding-right: clamp(10px, 2vw, 20px); /* Add right padding to prevent overlap with gap */
 }
 
 /* Right section */
 .right-section {
     flex: 1 1 0; /* Equal flex basis for proportional scaling - matches left section */
-    min-width: 0; /* Allow shrinking */
+    min-width: 250px; /* Minimum width to prevent overlap */
     display: flex;
     align-items: center; /* Center vertically like left section */
     justify-content: center;
@@ -117,7 +118,7 @@ body.loaded .logo {
     line-height: 1.2;
     width: 100%;
     max-width: 100%; /* Prevent overflow */
-    padding: 0 20px; /* Add padding for smaller screens */
+    padding: 0 clamp(10px, 2vw, 20px) 0 clamp(20px, 3vw, 40px); /* Top, right, bottom, left - extra left padding to ensure separation from gap */
     box-sizing: border-box;
 }
 
