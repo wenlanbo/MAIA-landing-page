@@ -748,6 +748,8 @@ function showWaitlistForm() {
     // Show waitlist form overlay
     const waitlistFormOverlay = document.getElementById('waitlist-form-overlay');
     if (waitlistFormOverlay) {
+        // Reset any inline opacity styles that might prevent reopening
+        waitlistFormOverlay.style.opacity = '';
         waitlistFormOverlay.style.display = 'flex';
         requestAnimationFrame(function() {
             waitlistFormOverlay.classList.add('show');
