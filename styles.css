@@ -660,27 +660,39 @@ body.video-mode .page-container {
     /* Adjust typewriter container positioning for vertical layout - align to top */
     .typewriter-container {
         position: relative;
-        left: auto;
+        left: 0;
         bottom: auto;
         top: 0; /* Align to top */
         transform: none;
         margin-top: 0; /* Remove margin since it's at top */
         margin-bottom: 15px; /* Add space below for loading line */
         padding: 0 clamp(10px, 2vw, 20px); /* Reset padding for vertical layout */
+        width: 100%;
+        max-width: 100%;
     }
     
     /* Adjust loading line for vertical layout - position directly under typewriter container */
     .loading-line {
         position: relative !important;
         left: 0 !important;
+        right: auto !important;
         bottom: auto !important;
         top: auto !important;
         margin-top: 0; /* No top margin, appears directly after typewriter container */
         margin-bottom: 0;
+        margin-left: 0;
+        margin-right: 0;
         width: 100%;
         padding-left: clamp(10px, 2vw, 20px); /* Match typewriter container left padding */
         padding-right: clamp(10px, 2vw, 20px); /* Match typewriter container right padding */
         box-sizing: border-box;
         transform: none !important; /* Remove any transforms */
+    }
+    
+    /* Ensure loading line pseudo-element aligns properly */
+    .loading-line::before {
+        left: 0 !important; /* Start from left edge of loading-line container */
+        right: auto !important;
+        width: 100% !important; /* Full width within the padded container */
     }
 }
