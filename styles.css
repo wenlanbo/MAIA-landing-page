@@ -62,21 +62,22 @@ body.loaded .logo {
     min-height: 100vh;
     justify-content: center;
     align-items: center;
-    gap: clamp(40px, 5vw, 80px); /* Responsive gap: min 40px, preferred 5vw, max 80px - maintains consistent spacing */
+    gap: clamp(60px, 6vw, 100px); /* Increased gap: min 60px, preferred 6vw, max 100px - ensures better separation */
     padding: 0 clamp(20px, 3vw, 60px); /* Add responsive horizontal padding */
     box-sizing: border-box;
 }
 
 /* Left section */
 .left-section {
-    flex: 1 1 0; /* Equal flex basis for proportional scaling */
-    min-width: 200px; /* Minimum width to prevent overlap */
-    max-width: none; /* Remove fixed max-width to allow proportional scaling */
+    flex: 1 1 300px; /* Equal flex basis, minimum 300px to prevent overlap */
+    max-width: 50%; /* Prevent from taking more than half the space */
     display: flex;
     align-items: center;
     justify-content: flex-end; /* Right-align content within left section */
     position: relative;
     padding: 0 clamp(10px, 2vw, 20px); /* Responsive padding */
+    overflow: hidden; /* Prevent content from overflowing */
+    box-sizing: border-box;
 }
 
 /* Hero title */
@@ -87,20 +88,26 @@ body.loaded .logo {
     color: #fff;
     text-align: right; /* Right-aligned within left section */
     width: 100%;
+    max-width: 100%; /* Ensure it doesn't exceed container */
     margin: 0;
     white-space: nowrap; /* Prevent text from wrapping to keep in one line */
-    padding-right: clamp(10px, 2vw, 20px); /* Add right padding to prevent overlap with gap */
+    padding-right: clamp(15px, 3vw, 30px); /* Increased right padding to prevent overlap with gap */
+    overflow: hidden; /* Hide any overflow */
+    text-overflow: ellipsis; /* Show ellipsis if text is too long */
+    box-sizing: border-box;
 }
 
 /* Right section */
 .right-section {
-    flex: 1 1 0; /* Equal flex basis for proportional scaling - matches left section */
-    min-width: 250px; /* Minimum width to prevent overlap */
+    flex: 1 1 350px; /* Equal flex basis, minimum 350px to prevent overlap */
     display: flex;
     align-items: center; /* Center vertically like left section */
-    justify-content: center;
+    justify-content: flex-start; /* Align content to left */
     padding: clamp(20px, 3vw, 40px); /* Responsive padding: min 20px, preferred 3vw, max 40px */
+    padding-left: clamp(30px, 4vw, 50px); /* Extra left padding to ensure separation from gap */
     position: relative;
+    overflow: hidden; /* Prevent content from overflowing */
+    box-sizing: border-box;
 }
 
 /* Typewriter animation container */
@@ -623,7 +630,7 @@ body.video-mode .page-container {
 }
 
 /* Responsive layout: Stack sections vertically when space is very constrained */
-@media (max-width: 800px) {
+@media (max-width: 900px) {
     .page-container {
         flex-direction: column; /* Stack vertically */
         gap: clamp(20px, 4vh, 60px); /* Vertical gap instead of horizontal */
