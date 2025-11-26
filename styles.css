@@ -85,10 +85,10 @@ body.loaded .logo {
     font-size: clamp(40px, 8vw, 100px); /* Responsive font size: min 40px, preferred 8vw, max 100px */
     font-weight: 600;
     color: #fff;
-    text-align: center;
+    text-align: left; /* Left aligned to keep text in one line */
     width: 100%;
     margin: 0;
-    word-wrap: break-word; /* Allow text to wrap if needed */
+    white-space: nowrap; /* Prevent text from wrapping to keep in one line */
 }
 
 /* Right section */
@@ -465,7 +465,7 @@ body.video-mode .page-container {
     background-color: rgba(40, 40, 40, 0.66); /* #282828 with 66% opacity */
     color: #fff;
     font-family: 'TTCommonsPro-DemiBold', sans-serif;
-    font-size: 20px;
+    font-size: 16px; /* Match top right button text size */
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -483,7 +483,7 @@ body.video-mode .page-container {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(12, 12, 12, 0.65); /* #0C0C0C with 65% opacity */
+    background-color: rgba(12, 12, 12, 0.90); /* #0C0C0C with 90% opacity */
     z-index: 250; /* Above everything including logo */
     display: none;
     opacity: 0;
@@ -600,7 +600,7 @@ body.video-mode .page-container {
     width: 100%;
     padding: 15px 30px;
     font-family: 'TTCommonsPro-DemiBold', sans-serif;
-    font-size: 20px;
+    font-size: 16px; /* Match top right button text size */
     font-weight: 600;
     color: #fff;
     background-color: rgba(40, 40, 40, 0.66); /* #282828 with 66% opacity */
