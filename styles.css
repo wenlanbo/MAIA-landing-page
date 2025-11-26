@@ -647,7 +647,7 @@ body.video-mode .page-container {
         order: 2; /* Right section appears second (at bottom) */
         align-items: flex-start; /* Align typewriter container to top */
         justify-content: flex-start; /* Left-align content */
-        padding-top: clamp(20px, 3vh, 40px); /* Add top spacing */
+        padding: clamp(20px, 3vh, 40px) clamp(20px, 3vw, 60px); /* Top/bottom and left/right padding */
     }
     
     /* Adjust hero title for vertical layout */
@@ -666,9 +666,10 @@ body.video-mode .page-container {
         transform: none;
         margin-top: 0; /* Remove margin since it's at top */
         margin-bottom: 15px; /* Add space below for loading line */
-        padding: 0 clamp(10px, 2vw, 20px); /* Reset padding for vertical layout */
+        padding: 0; /* Remove all padding - let right-section handle it */
         width: 100%;
         max-width: 100%;
+        box-sizing: border-box;
     }
     
     /* Adjust loading line for vertical layout - position directly under typewriter container */
@@ -683,16 +684,15 @@ body.video-mode .page-container {
         margin-left: 0;
         margin-right: 0;
         width: 100%;
-        padding-left: clamp(10px, 2vw, 20px); /* Match typewriter container left padding */
-        padding-right: clamp(10px, 2vw, 20px); /* Match typewriter container right padding */
+        padding: 0; /* Remove padding - match typewriter container */
         box-sizing: border-box;
         transform: none !important; /* Remove any transforms */
     }
     
     /* Ensure loading line pseudo-element aligns properly */
     .loading-line::before {
-        left: 0 !important; /* Start from left edge of loading-line container */
+        left: 0 !important; /* Start from left edge */
         right: auto !important;
-        width: 100% !important; /* Full width within the padded container */
+        width: 100% !important; /* Full width */
     }
 }
