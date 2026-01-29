@@ -57,7 +57,8 @@ console.log('[DEBUG] Supabase Key (first 20 chars):', SUPABASE_ANON_KEY.substrin
 } catch (error) {
     console.error('[DEBUG] Error creating Supabase client:', error);
     console.error('[DEBUG] Error stack:', error.stack);
-    throw error;
+    // Don't throw - allow page to continue without Supabase functionality
+    console.warn('[DEBUG] Continuing without Supabase - waitlist form will not work');
 }
 
 // Use supabaseClient directly in the rest of the code (avoid conflict with window.supabase)
@@ -602,8 +603,12 @@ function waitForBackgroundImage() {
             body.classList.add('loaded');
             // Initialize typewriter after both load
             initTypewriter();
+            console.log('[DEBUG] Typewriter initialized, setting 10s timeout for video transition');
             // After 8 seconds (loading animation) + 2 seconds pause, transition to video
-            setTimeout(transitionToVideo, 10000);
+            setTimeout(function() {
+                console.log('[DEBUG] 10s timeout fired, calling transitionToVideo...');
+                transitionToVideo();
+            }, 10000);
         }
     }
     
@@ -665,11 +670,15 @@ if (document.readyState === 'loading') {
 
 // Transition to video mode: black background, play video, show logo and button
 function transitionToVideo() {
+    console.log('[DEBUG] transitionToVideo() called');
     const body = document.body;
     const videoOverlay = document.getElementById('video-overlay');
     const video = document.getElementById('placeholder-video');
     const logo = document.querySelector('.logo');
     const waitlistButton = document.getElementById('waitlist-button');
+    
+    console.log('[DEBUG] Video element:', video ? 'found' : 'NOT FOUND');
+    console.log('[DEBUG] Video overlay:', videoOverlay ? 'found' : 'NOT FOUND');
     
     // Add video mode class to body for CSS styling (triggers fade-in)
     body.classList.add('video-mode');
