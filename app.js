@@ -60,8 +60,7 @@ console.log('[DEBUG] Supabase Key (first 20 chars):', SUPABASE_ANON_KEY.substrin
     throw error;
 }
 
-// Export client as 'supabase' for use in the rest of the code
-const supabase = supabaseClient;
+// Use supabaseClient directly in the rest of the code (avoid conflict with window.supabase)
 
 // DOM elements
 console.log('[DEBUG] Getting DOM elements...');
@@ -212,7 +211,7 @@ form.addEventListener('submit', async (e) => {
         console.log('[DEBUG] Supabase client key (first 20 chars):', supabase?.supabaseKey?.substring(0, 20) || 'NOT FOUND');
         
         // Verify client is properly initialized
-        if (!supabase || !supabase.rpc) {
+        if (!supabaseClient || !supabaseClient.rpc) {
             throw new Error('Supabase client not properly initialized');
         }
         
@@ -226,7 +225,7 @@ form.addEventListener('submit', async (e) => {
         });
         
         // Make the RPC call
-        const rpcResponse = await supabase.rpc('waitlist_signup', {
+        const rpcResponse = await supabaseClient.rpc('waitlist_signup', {
             p_name: name,
             p_org: org,
             p_email: email
@@ -873,7 +872,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             try {
                 // Call Supabase RPC function
-                const { data, error } = await supabase.rpc('waitlist_signup', {
+                const { data, error } = await supabaseClient.rpc('waitlist_signup', {
                     p_name: name,
                     p_org: org,
                     p_email: email
