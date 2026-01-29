@@ -592,9 +592,13 @@ function waitForBackgroundImage() {
     const video = document.getElementById('placeholder-video');
     let videoLoaded = false;
     let imageLoaded = false;
+    let hasProceeded = false; // Prevent multiple calls
     
     function checkBothLoaded() {
+        if (hasProceeded) return; // Already proceeded
         if (videoLoaded && imageLoaded) {
+            hasProceeded = true;
+            console.log('[DEBUG] Both assets loaded, proceeding...');
             body.classList.remove('loading');
             body.classList.add('loaded');
             // Initialize typewriter after both load
@@ -604,13 +608,25 @@ function waitForBackgroundImage() {
         }
     }
     
+    // FALLBACK: If assets don't load within 3 seconds, proceed anyway
+    setTimeout(function() {
+        if (!hasProceeded) {
+            console.log('[DEBUG] Fallback timeout triggered - proceeding without all assets');
+            videoLoaded = true;
+            imageLoaded = true;
+            checkBothLoaded();
+        }
+    }, 3000);
+    
     bgImage.onload = function() {
+        console.log('[DEBUG] Background image loaded');
         imageLoaded = true;
         checkBothLoaded();
     };
     
     bgImage.onerror = function() {
         // If image fails to load, still proceed
+        console.log('[DEBUG] Background image failed to load');
         imageLoaded = true;
         checkBothLoaded();
     };
@@ -618,16 +634,24 @@ function waitForBackgroundImage() {
     if (video) {
         video.load(); // Start loading the video
         video.addEventListener('loadeddata', function() {
+            console.log('[DEBUG] Video loadeddata event');
             videoLoaded = true;
             checkBothLoaded();
         }, { once: true });
-        video.addEventListener('error', function() {
+        video.addEventListener('canplaythrough', function() {
+            console.log('[DEBUG] Video canplaythrough event');
+            videoLoaded = true;
+            checkBothLoaded();
+        }, { once: true });
+        video.addEventListener('error', function(e) {
             // If video fails to load, still proceed
+            console.log('[DEBUG] Video error:', e);
             videoLoaded = true;
             checkBothLoaded();
         }, { once: true });
     } else {
         // If video element doesn't exist, proceed without it
+        console.log('[DEBUG] No video element found');
         videoLoaded = true;
         checkBothLoaded();
     }
