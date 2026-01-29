@@ -2,13 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=https://medivisbuilds.blob.core.windows.net/maia/Maia_0.1.1.29_master.appinstaller">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Downloading MAIA...</title>
-    <script>
-        window.location.href = "https://medivisbuilds.blob.core.windows.net/maia/Maia_0.1.1.29_master.appinstaller";
-    </script>
+    <link rel="icon" type="image/png" href="../fav.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+        }
+        .logo {
+            width: 120px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #63ecd6;
+        }
+        p {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 25px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(99, 236, 214, 0.2);
+            border-top-color: #63ecd6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .manual-link {
+            color: #63ecd6;
+            text-decoration: none;
+            font-size: 14px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .manual-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+        .os-badge {
+            display: inline-block;
+            background: rgba(99, 236, 214, 0.15);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #63ecd6;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <p>Downloading MAIA... If the download doesn't start automatically, <a href="https://medivisbuilds.blob.core.windows.net/maia/Maia_0.1.1.29_master.appinstaller">click here</a>.</p>
+    <div class="container">
+        <img src="../Assets/img/MaiawithGlow.png" alt="MAIA" class="logo">
+        <div class="os-badge" id="os-badge">Detecting system...</div>
+        <h1>Downloading MAIA</h1>
+        <div class="spinner"></div>
+        <p>Your download should start automatically.</p>
+        <a href="#" id="manual-link" class="manual-link">Click here if download doesn't start</a>
+    </div>
+
+    <script>
+        (function() {
+            // Detect OS
+            const userAgent = navigator.userAgent.toLowerCase();
+            const platform = navigator.platform.toLowerCase();
+            
+            let os = 'unknown';
+            let downloadUrl = '';
+            
+            // Check for Mac
+            if (platform.includes('mac') || userAgent.includes('macintosh') || userAgent.includes('mac os')) {
+                os = 'macOS';
+                downloadUrl = 'https://medivisbuilds.blob.core.windows.net/maia/Maia_release.dmg';
+            }
+            // Check for Windows
+            else if (platform.includes('win') || userAgent.includes('windows')) {
+                os = 'Windows';
+                downloadUrl = 'https://medivisbuilds.blob.core.windows.net/maia/Maia.appinstaller';
+            }
+            // Default to Windows for other/unknown
+            else {
+                os = 'your system';
+                downloadUrl = 'https://medivisbuilds.blob.core.windows.net/maia/Maia.appinstaller';
+            }
+            
+            // Update UI
+            document.getElementById('os-badge').textContent = os === 'your system' ? 'Download' : os + ' detected';
+            document.getElementById('manual-link').href = downloadUrl;
+            
+            // Start download after short delay (gives page time to render)
+            setTimeout(function() {
+                // Use replace to not add to browser history
+                window.location.replace(downloadUrl);
+            }, 800);
+        })();
+    </script>
 </body>
 </html>
